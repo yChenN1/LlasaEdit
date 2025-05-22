@@ -1,590 +1,0 @@
-W0521 23:58:46.916439 140663215924224 torch/distributed/run.py:779] 
-W0521 23:58:46.916439 140663215924224 torch/distributed/run.py:779] *****************************************
-W0521 23:58:46.916439 140663215924224 torch/distributed/run.py:779] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
-W0521 23:58:46.916439 140663215924224 torch/distributed/run.py:779] *****************************************
-/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/training_args.py:1545: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead
-  warnings.warn(
-/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/training_args.py:1545: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead
-  warnings.warn(
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/deepspeed.py:24: FutureWarning: transformers.deepspeed module is deprecated and will be removed in a future version. Please import deepspeed modules directly from transformers.integrations
-  warnings.warn(
-WARNING:accelerate.utils.other:Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
-You are adding a <class 'transformers.integrations.integration_utils.WandbCallback'> to the callbacks of this Trainer, but there is already one. The currentlist of callbacks is
-:DefaultFlowCallback
-WandbCallback
-ProgressCallback
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/deepspeed.py:24: FutureWarning: transformers.deepspeed module is deprecated and will be removed in a future version. Please import deepspeed modules directly from transformers.integrations
-  warnings.warn(
-/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
-  warnings.warn(_create_warning_msg(
-/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
-  warnings.warn(_create_warning_msg(
-Using /mnt/fast/nobackup/users/yc01815/.cache/torch_extensions/py39_cu121 as PyTorch extensions root...
-Using /mnt/fast/nobackup/users/yc01815/.cache/torch_extensions/py39_cu121 as PyTorch extensions root...
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-Detected CUDA files, patching ldflags
-Emitting ninja build file /mnt/fast/nobackup/users/yc01815/.cache/torch_extensions/py39_cu121/fused_adam/build.ninja...
-/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/utils/cpp_extension.py:1965: UserWarning: TORCH_CUDA_ARCH_LIST is not set, all archs for visible cards are included for compilation. 
-If this is not desired, please set os.environ['TORCH_CUDA_ARCH_LIST'].
-  warnings.warn(
-Building extension module fused_adam...
-Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-Loading extension module fused_adam...
-Loading extension module fused_adam...
-/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
-  warnings.warn(_create_warning_msg(
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable 	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISMTOKENIZERS_PARALLELISM=(true | false)
-=(true | false)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-wandb: WARNING The `run_name` is currently set to the same value as `TrainingArguments.output_dir`. If this was not intended, please specify a different run name by setting the `TrainingArguments.run_name` parameter.
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-wandb: Using wandb-core as the SDK backend. Please refer to https://wandb.me/wandb-core for more information.
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-wandb: Currently logged in as: cheny2707. Use `wandb login --relogin` to force relogin
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-wandb: Tracking run with wandb version 0.18.1
-wandb: Run data is saved locally in /mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/wandb/run-20250522_000119-bnrkqcnd
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run /mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/finetune/EVC_0521
-wandb: ⭐️ View project at https://wandb.ai/cheny2707/huggingface
-wandb: 🚀 View run at https://wandb.ai/cheny2707/huggingface/runs/bnrkqcnd
-  0%|          | 0/21560 [00:00<?, ?it/s]/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
-  warnings.warn(_create_warning_msg(
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-  0%|          | 1/21560 [00:07<43:50:40,  7.32s/it]  0%|          | 2/21560 [00:09<26:41:43,  4.46s/it]  0%|          | 3/21560 [00:12<21:37:17,  3.61s/it]  0%|          | 4/21560 [00:14<18:56:04,  3.16s/it]  0%|          | 5/21560 [00:17<17:22:14,  2.90s/it]  0%|          | 6/21560 [00:19<16:30:27,  2.76s/it]  0%|          | 7/21560 [00:22<16:03:18,  2.68s/it]  0%|          | 8/21560 [00:24<15:41:12,  2.62s/it]  0%|          | 9/21560 [00:27<15:21:46,  2.57s/it]  0%|          | 10/21560 [00:29<15:18:01,  2.56s/it]                                                       0%|          | 10/21560 [00:33<15:18:01,  2.56s/it]  0%|          | 11/21560 [00:36<22:57:14,  3.83s/it]  0%|          | 12/21560 [00:38<20:29:30,  3.42s/it]  0%|          | 13/21560 [00:41<18:58:41,  3.17s/it]  0%|          | 14/21560 [00:44<17:44:23,  2.96s/it]  0%|          | 15/21560 [00:46<16:54:23,  2.82s/it]  0%|          | 16/21560 [00:49<16:14:50,  2.71s/it]  0%|          | 17/21560 [00:51<16:07:58,  2.70s/it]  0%|          | 18/21560 [00:54<15:44:50,  2.63s/it]  0%|          | 19/21560 [00:56<15:25:30,  2.58s/it]  0%|          | 20/21560 [00:59<15:11:39,  2.54s/it]                                                       0%|          | 20/21560 [00:59<15:11:39,  2.54s/it]  0%|          | 21/21560 [01:01<15:12:59,  2.54s/it]  0%|          | 22/21560 [01:04<15:15:02,  2.55s/it]  0%|          | 23/21560 [01:06<15:07:49,  2.53s/it]  0%|          | 24/21560 [01:09<15:02:13,  2.51s/it]  0%|          | 25/21560 [01:11<15:20:29,  2.56s/it]  0%|          | 26/21560 [01:14<15:15:37,  2.55s/it]  0%|          | 27/21560 [01:16<15:08:30,  2.53s/it]  0%|          | 28/21560 [01:19<15:00:47,  2.51s/it]  0%|          | 29/21560 [01:21<14:59:36,  2.51s/it]  0%|          | 30/21560 [01:24<15:01:21,  2.51s/it]                                                       0%|          | 30/21560 [01:24<15:01:21,  2.51s/it]  0%|          | 31/21560 [01:26<14:53:28,  2.49s/it]  0%|          | 32/21560 [01:29<14:50:30,  2.48s/it]  0%|          | 33/21560 [01:31<14:58:03,  2.50s/it]  0%|          | 34/21560 [01:34<14:52:13,  2.49s/it]  0%|          | 35/21560 [01:36<14:49:20,  2.48s/it]  0%|          | 36/21560 [01:39<14:53:24,  2.49s/it]  0%|          | 37/21560 [01:41<15:06:33,  2.53s/it]  0%|          | 38/21560 [01:44<14:58:16,  2.50s/it]  0%|          | 39/21560 [01:46<14:51:03,  2.48s/it]  0%|          | 40/21560 [01:49<14:52:43,  2.49s/it]                                                       0%|          | 40/21560 [01:49<14:52:43,  2.49s/it]  0%|          | 41/21560 [01:51<15:01:23,  2.51s/it]  0%|          | 42/21560 [01:54<14:56:12,  2.50s/it]  0%|          | 43/21560 [01:56<14:54:09,  2.49s/it]  0%|          | 44/21560 [01:59<14:49:25,  2.48s/it]  0%|          | 45/21560 [02:01<14:56:03,  2.50s/it]  0%|          | 46/21560 [02:04<14:49:56,  2.48s/it]  0%|          | 47/21560 [02:06<14:45:33,  2.47s/it]  0%|          | 48/21560 [02:09<14:42:28,  2.46s/it]  0%|          | 49/21560 [02:11<14:40:28,  2.46s/it]  0%|          | 50/21560 [02:13<14:38:48,  2.45s/it]                                                       0%|          | 50/21560 [02:13<14:38:48,  2.45s/it]  0%|          | 51/21560 [02:16<14:37:36,  2.45s/it]  0%|          | 52/21560 [02:18<14:36:22,  2.44s/it]  0%|          | 53/21560 [02:21<14:35:43,  2.44s/it]  0%|          | 54/21560 [02:23<14:35:35,  2.44s/it]  0%|          | 55/21560 [02:26<14:35:58,  2.44s/it]  0%|          | 56/21560 [02:28<14:36:04,  2.44s/it]  0%|          | 57/21560 [02:30<14:35:17,  2.44s/it]  0%|          | 58/21560 [02:33<14:34:59,  2.44s/it]  0%|          | 59/21560 [02:35<14:34:29,  2.44s/it]  0%|          | 60/21560 [02:38<14:34:42,  2.44s/it]                                                       0%|          | 60/21560 [02:38<14:34:42,  2.44s/it]  0%|          | 61/21560 [02:40<14:35:31,  2.44s/it]  0%|          | 62/21560 [02:43<14:35:15,  2.44s/it]  0%|          | 63/21560 [02:45<14:34:40,  2.44s/it]  0%|          | 64/21560 [02:48<14:34:03,  2.44s/it]  0%|          | 65/21560 [02:50<14:33:37,  2.44s/it]  0%|          | 66/21560 [02:52<14:33:22,  2.44s/it]  0%|          | 67/21560 [02:55<14:34:18,  2.44s/it]  0%|          | 68/21560 [02:57<14:34:09,  2.44s/it]  0%|          | 69/21560 [03:00<14:33:58,  2.44s/it]  0%|          | 70/21560 [03:02<14:33:43,  2.44s/it]                                                       0%|          | 70/21560 [03:02<14:33:43,  2.44s/it]  0%|          | 71/21560 [03:05<14:34:14,  2.44s/it]  0%|          | 72/21560 [03:07<14:33:56,  2.44s/it]  0%|          | 73/21560 [03:10<14:33:13,  2.44s/it]  0%|          | 74/21560 [03:12<14:33:44,  2.44s/it]  0%|          | 75/21560 [03:14<14:34:02,  2.44s/it]  0%|          | 76/21560 [03:17<14:33:57,  2.44s/it]  0%|          | 77/21560 [03:19<14:34:42,  2.44s/it]  0%|          | 78/21560 [03:22<14:35:03,  2.44s/it]  0%|          | 79/21560 [03:24<14:35:05,  2.44s/it]  0%|          | 80/21560 [03:27<14:35:26,  2.45s/it]                                                       0%|          | 80/21560 [03:27<14:35:26,  2.45s/it]  0%|          | 81/21560 [03:29<14:35:20,  2.45s/it]  0%|          | 82/21560 [03:32<14:34:57,  2.44s/it]  0%|          | 83/21560 [03:34<14:35:41,  2.45s/it]  0%|          | 84/21560 [03:36<14:35:23,  2.45s/it]  0%|          | 85/21560 [03:39<14:35:08,  2.45s/it]  0%|          | 86/21560 [03:41<14:35:05,  2.45s/it]  0%|          | 87/21560 [03:44<14:34:59,  2.44s/it]  0%|          | 88/21560 [03:46<14:34:39,  2.44s/it]  0%|          | 89/21560 [03:49<14:34:25,  2.44s/it]  0%|          | 90/21560 [03:51<14:34:01,  2.44s/it]                                                       0%|          | 90/21560 [03:51<14:34:01,  2.44s/it]  0%|          | 91/21560 [03:54<14:34:31,  2.44s/it]  0%|          | 92/21560 [03:56<14:33:36,  2.44s/it]  0%|          | 93/21560 [03:58<14:33:13,  2.44s/it]  0%|          | 94/21560 [04:01<14:33:02,  2.44s/it]  0%|          | 95/21560 [04:03<14:33:16,  2.44s/it]  0%|          | 96/21560 [04:06<14:33:39,  2.44s/it]  0%|          | 97/21560 [04:08<14:34:16,  2.44s/it]  0%|          | 98/21560 [04:11<14:35:46,  2.45s/it]  0%|          | 99/21560 [04:13<14:35:36,  2.45s/it]  0%|          | 100/21560 [04:16<14:35:18,  2.45s/it]                                                        0%|          | 100/21560 [04:16<14:35:18,  2.45s/it]  0%|          | 101/21560 [04:18<14:35:52,  2.45s/it]  0%|          | 102/21560 [04:20<14:35:22,  2.45s/it]  0%|          | 103/21560 [04:23<14:35:03,  2.45s/it]  0%|          | 104/21560 [04:25<14:34:18,  2.44s/it]  0%|          | 105/21560 [04:28<14:33:43,  2.44s/it]  0%|          | 106/21560 [04:30<14:33:58,  2.44s/it]  0%|          | 107/21560 [04:33<14:34:28,  2.45s/it]  1%|          | 108/21560 [04:35<14:34:23,  2.45s/it]  1%|          | 109/21560 [04:38<14:33:49,  2.44s/it]  1%|          | 110/21560 [04:40<14:33:49,  2.44s/it]                                                        1%|          | 110/21560 [04:40<14:33:49,  2.44s/it]  1%|          | 111/21560 [04:42<14:34:06,  2.45s/it]  1%|          | 112/21560 [04:45<14:33:56,  2.44s/it]  1%|          | 113/21560 [04:47<14:33:31,  2.44s/it]  1%|          | 114/21560 [04:50<14:33:14,  2.44s/it]  1%|          | 115/21560 [04:52<14:32:59,  2.44s/it]  1%|          | 116/21560 [04:55<14:32:43,  2.44s/it]  1%|          | 117/21560 [04:57<14:32:54,  2.44s/it]  1%|          | 118/21560 [05:00<14:34:13,  2.45s/it]  1%|          | 119/21560 [05:02<14:37:15,  2.45s/it]  1%|          | 120/21560 [05:04<14:36:26,  2.45s/it]                                                        1%|          | 120/21560 [05:04<14:36:26,  2.45s/it]  1%|          | 121/21560 [05:07<14:36:09,  2.45s/it]  1%|          | 122/21560 [05:09<14:35:48,  2.45s/it]  1%|          | 123/21560 [05:12<14:34:54,  2.45s/it]  1%|          | 124/21560 [05:14<14:34:15,  2.45s/it]  1%|          | 125/21560 [05:17<14:34:40,  2.45s/it]  1%|          | 126/21560 [05:19<14:34:37,  2.45s/it]  1%|          | 127/21560 [05:22<14:35:10,  2.45s/it]  1%|          | 128/21560 [05:24<14:35:19,  2.45s/it]  1%|          | 129/21560 [05:26<14:34:57,  2.45s/it]  1%|          | 130/21560 [05:29<14:34:22,  2.45s/it]                                                        1%|          | 130/21560 [05:29<14:34:22,  2.45s/it]  1%|          | 131/21560 [05:31<14:34:19,  2.45s/it]  1%|          | 132/21560 [05:34<14:33:28,  2.45s/it]  1%|          | 133/21560 [05:36<14:33:09,  2.45s/it]  1%|          | 134/21560 [05:39<14:33:11,  2.45s/it]  1%|          | 135/21560 [05:41<14:33:00,  2.44s/it]  1%|          | 136/21560 [05:44<14:32:53,  2.44s/it]  1%|          | 137/21560 [05:46<14:33:42,  2.45s/it]  1%|          | 138/21560 [05:49<14:34:25,  2.45s/it]  1%|          | 139/21560 [05:51<14:34:23,  2.45s/it]  1%|          | 140/21560 [05:53<14:35:45,  2.45s/it]                                                        1%|          | 140/21560 [05:53<14:35:45,  2.45s/it]  1%|          | 141/21560 [05:56<14:36:32,  2.46s/it]  1%|          | 142/21560 [05:58<14:35:49,  2.45s/it]  1%|          | 143/21560 [06:01<14:35:07,  2.45s/it]  1%|          | 144/21560 [06:03<14:34:53,  2.45s/it]  1%|          | 145/21560 [06:06<14:34:26,  2.45s/it]  1%|          | 146/21560 [06:08<14:33:30,  2.45s/it]  1%|          | 147/21560 [06:11<14:33:41,  2.45s/it]  1%|          | 148/21560 [06:13<14:33:08,  2.45s/it]  1%|          | 149/21560 [06:15<14:32:37,  2.45s/it]  1%|          | 150/21560 [06:18<14:32:40,  2.45s/it]                                                        1%|          | 150/21560 [06:18<14:32:40,  2.45s/it]  1%|          | 151/21560 [06:20<14:32:34,  2.45s/it]  1%|          | 152/21560 [06:23<14:31:59,  2.44s/it]  1%|          | 153/21560 [06:25<14:31:32,  2.44s/it]  1%|          | 154/21560 [06:28<14:31:01,  2.44s/it]  1%|          | 155/21560 [06:30<14:30:55,  2.44s/it]  1%|          | 156/21560 [06:33<14:30:38,  2.44s/it]  1%|          | 157/21560 [06:35<14:30:36,  2.44s/it]  1%|          | 158/21560 [06:37<14:30:43,  2.44s/it]  1%|          | 159/21560 [06:40<14:30:45,  2.44s/it]  1%|          | 160/21560 [06:42<14:30:45,  2.44s/it]                                                        1%|          | 160/21560 [06:42<14:30:45,  2.44s/it]  1%|          | 161/21560 [06:45<14:31:14,  2.44s/it]  1%|          | 162/21560 [06:47<14:31:40,  2.44s/it]  1%|          | 163/21560 [06:50<14:31:40,  2.44s/it]  1%|          | 164/21560 [06:52<14:32:02,  2.45s/it]  1%|          | 165/21560 [06:55<14:32:33,  2.45s/it]  1%|          | 166/21560 [06:57<14:32:06,  2.45s/it]  1%|          | 167/21560 [06:59<14:31:38,  2.44s/it]  1%|          | 168/21560 [07:02<14:31:36,  2.44s/it]  1%|          | 169/21560 [07:04<14:31:12,  2.44s/it]  1%|          | 170/21560 [07:07<14:30:55,  2.44s/it]                                                        1%|          | 170/21560 [07:07<14:30:55,  2.44s/it]  1%|          | 171/21560 [07:09<14:30:45,  2.44s/it]  1%|          | 172/21560 [07:12<14:30:14,  2.44s/it]  1%|          | 173/21560 [07:14<14:30:13,  2.44s/it]  1%|          | 174/21560 [07:17<14:30:50,  2.44s/it]  1%|          | 175/21560 [07:19<14:31:01,  2.44s/it]  1%|          | 176/21560 [07:21<14:31:21,  2.44s/it]  1%|          | 177/21560 [07:24<14:31:04,  2.44s/it]  1%|          | 178/21560 [07:26<14:31:11,  2.44s/it]  1%|          | 179/21560 [07:29<14:31:45,  2.45s/it]  1%|          | 180/21560 [07:31<14:33:59,  2.45s/it]                                                        1%|          | 180/21560 [07:31<14:33:59,  2.45s/it]  1%|          | 181/21560 [07:34<14:33:37,  2.45s/it]  1%|          | 182/21560 [07:36<14:32:44,  2.45s/it]  1%|          | 183/21560 [07:39<14:32:23,  2.45s/it]  1%|          | 184/21560 [07:41<14:33:59,  2.45s/it]  1%|          | 185/21560 [07:43<14:33:19,  2.45s/it]  1%|          | 186/21560 [07:46<14:33:14,  2.45s/it]  1%|          | 187/21560 [07:48<14:33:23,  2.45s/it]  1%|          | 188/21560 [07:51<14:33:27,  2.45s/it]  1%|          | 189/21560 [07:53<14:32:39,  2.45s/it]  1%|          | 190/21560 [07:56<14:31:59,  2.45s/it]                                                        1%|          | 190/21560 [07:56<14:31:59,  2.45s/it]  1%|          | 191/21560 [07:58<14:31:53,  2.45s/it]  1%|          | 192/21560 [08:01<14:31:31,  2.45s/it]  1%|          | 193/21560 [08:03<14:31:01,  2.45s/it]  1%|          | 194/21560 [08:06<14:30:38,  2.44s/it]  1%|          | 195/21560 [08:08<14:30:32,  2.44s/it]  1%|          | 196/21560 [08:10<14:30:40,  2.45s/it]  1%|          | 197/21560 [08:13<14:30:37,  2.45s/it]  1%|          | 198/21560 [08:15<14:30:14,  2.44s/it]  1%|          | 199/21560 [08:18<14:30:27,  2.44s/it]  1%|          | 200/21560 [08:20<14:31:26,  2.45s/it]                                                        1%|          | 200/21560 [08:20<14:31:26,  2.45s/it]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-
-  0%|          | 0/125 [00:00<?, ?it/s][A
-  2%|▏         | 2/125 [00:00<00:11, 10.52it/s][A
-  3%|▎         | 4/125 [00:00<00:18,  6.55it/s][A
-  4%|▍         | 5/125 [00:00<00:19,  6.07it/s][A
-  5%|▍         | 6/125 [00:00<00:20,  5.77it/s][A
-  6%|▌         | 7/125 [00:01<00:21,  5.56it/s][A
-  6%|▋         | 8/125 [00:01<00:21,  5.41it/s][A
-  7%|▋         | 9/125 [00:01<00:21,  5.31it/s][A
-  8%|▊         | 10/125 [00:01<00:21,  5.29it/s][A
-  9%|▉         | 11/125 [00:01<00:21,  5.23it/s][A
- 10%|▉         | 12/125 [00:02<00:21,  5.20it/s][A
- 10%|█         | 13/125 [00:02<00:21,  5.20it/s][A
- 11%|█         | 14/125 [00:02<00:21,  5.18it/s][A
- 12%|█▏        | 15/125 [00:02<00:21,  5.16it/s][A
- 13%|█▎        | 16/125 [00:02<00:21,  5.15it/s][A
- 14%|█▎        | 17/125 [00:03<00:21,  5.14it/s][A
- 14%|█▍        | 18/125 [00:03<00:20,  5.15it/s][A
- 15%|█▌        | 19/125 [00:03<00:20,  5.15it/s][A
- 16%|█▌        | 20/125 [00:03<00:20,  5.14it/s][A
- 17%|█▋        | 21/125 [00:03<00:20,  5.15it/s][A
- 18%|█▊        | 22/125 [00:04<00:19,  5.15it/s][A
- 18%|█▊        | 23/125 [00:04<00:19,  5.15it/s][A
- 19%|█▉        | 24/125 [00:04<00:19,  5.13it/s][A
- 20%|██        | 25/125 [00:04<00:19,  5.15it/s][A
- 21%|██        | 26/125 [00:04<00:19,  5.15it/s][A
- 22%|██▏       | 27/125 [00:05<00:19,  5.15it/s][A
- 22%|██▏       | 28/125 [00:05<00:18,  5.14it/s][A
- 23%|██▎       | 29/125 [00:05<00:18,  5.15it/s][A
- 24%|██▍       | 30/125 [00:05<00:18,  5.15it/s][A
- 25%|██▍       | 31/125 [00:05<00:18,  5.14it/s][A
- 26%|██▌       | 32/125 [00:06<00:18,  5.13it/s][A
- 26%|██▋       | 33/125 [00:06<00:17,  5.14it/s][A
- 27%|██▋       | 34/125 [00:06<00:17,  5.15it/s][A
- 28%|██▊       | 35/125 [00:06<00:17,  5.14it/s][A
- 29%|██▉       | 36/125 [00:06<00:17,  5.13it/s][A
- 30%|██▉       | 37/125 [00:06<00:17,  5.14it/s][A
- 30%|███       | 38/125 [00:07<00:16,  5.14it/s][A
- 31%|███       | 39/125 [00:07<00:16,  5.14it/s][A
- 32%|███▏      | 40/125 [00:07<00:16,  5.14it/s][A
- 33%|███▎      | 41/125 [00:07<00:16,  5.14it/s][A
- 34%|███▎      | 42/125 [00:07<00:16,  5.14it/s][A
- 34%|███▍      | 43/125 [00:08<00:15,  5.14it/s][A
- 35%|███▌      | 44/125 [00:08<00:15,  5.14it/s][A
- 36%|███▌      | 45/125 [00:08<00:15,  5.14it/s][A
- 37%|███▋      | 46/125 [00:08<00:15,  5.14it/s][A
- 38%|███▊      | 47/125 [00:08<00:15,  5.15it/s][A
- 38%|███▊      | 48/125 [00:09<00:14,  5.14it/s][A
- 39%|███▉      | 49/125 [00:09<00:14,  5.14it/s][A
- 40%|████      | 50/125 [00:09<00:14,  5.14it/s][A
- 41%|████      | 51/125 [00:09<00:14,  5.13it/s][A
- 42%|████▏     | 52/125 [00:09<00:14,  5.14it/s][A
- 42%|████▏     | 53/125 [00:10<00:14,  5.14it/s][A
- 43%|████▎     | 54/125 [00:10<00:13,  5.14it/s][A
- 44%|████▍     | 55/125 [00:10<00:13,  5.14it/s][A
- 45%|████▍     | 56/125 [00:10<00:13,  5.14it/s][A
- 46%|████▌     | 57/125 [00:10<00:13,  5.14it/s][A
- 46%|████▋     | 58/125 [00:11<00:13,  5.13it/s][A
- 47%|████▋     | 59/125 [00:11<00:12,  5.13it/s][A
- 48%|████▊     | 60/125 [00:11<00:12,  5.13it/s][A
- 49%|████▉     | 61/125 [00:11<00:12,  5.14it/s][A
- 50%|████▉     | 62/125 [00:11<00:12,  5.13it/s][A
- 50%|█████     | 63/125 [00:12<00:12,  5.13it/s][A
- 51%|█████     | 64/125 [00:12<00:11,  5.13it/s][A
- 52%|█████▏    | 65/125 [00:12<00:11,  5.13it/s][A
- 53%|█████▎    | 66/125 [00:12<00:11,  5.13it/s][A
- 54%|█████▎    | 67/125 [00:12<00:11,  5.13it/s][A
- 54%|█████▍    | 68/125 [00:13<00:11,  5.13it/s][A
- 55%|█████▌    | 69/125 [00:13<00:10,  5.13it/s][A
- 56%|█████▌    | 70/125 [00:13<00:10,  5.13it/s][A
- 57%|█████▋    | 71/125 [00:13<00:10,  5.13it/s][A
- 58%|█████▊    | 72/125 [00:13<00:10,  5.13it/s][A
- 58%|█████▊    | 73/125 [00:14<00:10,  5.13it/s][A
- 59%|█████▉    | 74/125 [00:14<00:09,  5.13it/s][A
- 60%|██████    | 75/125 [00:14<00:09,  5.13it/s][A
- 61%|██████    | 76/125 [00:14<00:09,  5.13it/s][A
- 62%|██████▏   | 77/125 [00:14<00:09,  5.13it/s][A
- 62%|██████▏   | 78/125 [00:14<00:09,  5.13it/s][A
- 63%|██████▎   | 79/125 [00:15<00:08,  5.13it/s][A
- 64%|██████▍   | 80/125 [00:15<00:08,  5.13it/s][A
- 65%|██████▍   | 81/125 [00:15<00:08,  5.13it/s][A
- 66%|██████▌   | 82/125 [00:15<00:08,  5.12it/s][A
- 66%|██████▋   | 83/125 [00:15<00:08,  5.13it/s][A
- 67%|██████▋   | 84/125 [00:16<00:08,  5.12it/s][A
- 68%|██████▊   | 85/125 [00:16<00:07,  5.13it/s][A
- 69%|██████▉   | 86/125 [00:16<00:07,  5.12it/s][A
- 70%|██████▉   | 87/125 [00:16<00:07,  5.12it/s][A
- 70%|███████   | 88/125 [00:16<00:07,  5.13it/s][A
- 71%|███████   | 89/125 [00:17<00:07,  5.12it/s][A
- 72%|███████▏  | 90/125 [00:17<00:06,  5.13it/s][A
- 73%|███████▎  | 91/125 [00:17<00:06,  5.13it/s][A
- 74%|███████▎  | 92/125 [00:17<00:06,  5.13it/s][A
- 74%|███████▍  | 93/125 [00:17<00:06,  5.13it/s][A
- 75%|███████▌  | 94/125 [00:18<00:06,  5.13it/s][A
- 76%|███████▌  | 95/125 [00:18<00:05,  5.13it/s][A
- 77%|███████▋  | 96/125 [00:18<00:05,  5.13it/s][A
- 78%|███████▊  | 97/125 [00:18<00:05,  5.10it/s][A
- 78%|███████▊  | 98/125 [00:18<00:05,  5.13it/s][A
- 79%|███████▉  | 99/125 [00:19<00:05,  5.12it/s][A
- 80%|████████  | 100/125 [00:19<00:04,  5.14it/s][A
- 81%|████████  | 101/125 [00:19<00:04,  5.14it/s][A
- 82%|████████▏ | 102/125 [00:19<00:04,  5.13it/s][A
- 82%|████████▏ | 103/125 [00:19<00:04,  5.13it/s][A
- 83%|████████▎ | 104/125 [00:20<00:04,  5.14it/s][A
- 84%|████████▍ | 105/125 [00:20<00:03,  5.13it/s][A
- 85%|████████▍ | 106/125 [00:20<00:03,  5.13it/s][A
- 86%|████████▌ | 107/125 [00:20<00:03,  5.13it/s][A
- 86%|████████▋ | 108/125 [00:20<00:03,  5.13it/s][A
- 87%|████████▋ | 109/125 [00:21<00:03,  5.12it/s][A
- 88%|████████▊ | 110/125 [00:21<00:02,  5.14it/s][A
- 89%|████████▉ | 111/125 [00:21<00:02,  5.13it/s][A
- 90%|████████▉ | 112/125 [00:21<00:02,  5.14it/s][A
- 90%|█████████ | 113/125 [00:21<00:02,  5.14it/s][A
- 91%|█████████ | 114/125 [00:21<00:02,  5.14it/s][A
- 92%|█████████▏| 115/125 [00:22<00:01,  5.14it/s][A
- 93%|█████████▎| 116/125 [00:22<00:01,  5.13it/s][A
- 94%|█████████▎| 117/125 [00:22<00:01,  5.14it/s][A
- 94%|█████████▍| 118/125 [00:22<00:01,  5.14it/s][A
- 95%|█████████▌| 119/125 [00:22<00:01,  5.14it/s][A
- 96%|█████████▌| 120/125 [00:23<00:00,  5.14it/s][A
- 97%|█████████▋| 121/125 [00:23<00:00,  5.14it/s][A
- 98%|█████████▊| 122/125 [00:23<00:00,  5.14it/s][A
- 98%|█████████▊| 123/125 [00:23<00:00,  5.14it/s][A
- 99%|█████████▉| 124/125 [00:23<00:00,  5.13it/s][A
-100%|██████████| 125/125 [00:24<00:00,  4.67it/s][A                                                      
-                                                 [A  1%|          | 200/21560 [08:45<14:31:26,  2.45s/it]
-100%|██████████| 125/125 [00:24<00:00,  4.67it/s][A
-                                                 [A  1%|          | 201/21560 [08:47<58:24:17,  9.84s/it]  1%|          | 202/21560 [08:50<45:13:40,  7.62s/it]  1%|          | 203/21560 [08:52<36:00:39,  6.07s/it]  1%|          | 204/21560 [08:55<29:33:41,  4.98s/it]  1%|          | 205/21560 [08:57<25:02:08,  4.22s/it]  1%|          | 206/21560 [09:00<21:52:12,  3.69s/it]  1%|          | 207/21560 [09:02<19:39:10,  3.31s/it]  1%|          | 208/21560 [09:04<18:06:03,  3.05s/it]  1%|          | 209/21560 [09:07<17:01:23,  2.87s/it]  1%|          | 210/21560 [09:09<16:16:52,  2.75s/it]                                                        1%|          | 210/21560 [09:09<16:16:52,  2.75s/it]  1%|          | 211/21560 [09:12<15:45:12,  2.66s/it]  1%|          | 212/21560 [09:14<15:24:02,  2.60s/it]  1%|          | 213/21560 [09:17<15:07:55,  2.55s/it]  1%|          | 214/21560 [09:19<14:56:27,  2.52s/it]  1%|          | 215/21560 [09:22<14:48:31,  2.50s/it]  1%|          | 216/21560 [09:24<14:42:58,  2.48s/it]  1%|          | 217/21560 [09:26<14:38:48,  2.47s/it]  1%|          | 218/21560 [09:29<14:35:49,  2.46s/it]  1%|          | 219/21560 [09:31<14:33:49,  2.46s/it]  1%|          | 220/21560 [09:34<14:32:43,  2.45s/it]                                                        1%|          | 220/21560 [09:34<14:32:43,  2.45s/it]  1%|          | 221/21560 [09:36<14:31:59,  2.45s/it]  1%|          | 222/21560 [09:39<14:31:11,  2.45s/it]  1%|          | 223/21560 [09:41<14:30:18,  2.45s/it]  1%|          | 224/21560 [09:44<14:29:49,  2.45s/it]  1%|          | 225/21560 [09:46<14:31:12,  2.45s/it]  1%|          | 226/21560 [09:48<14:30:42,  2.45s/it]  1%|          | 227/21560 [09:51<14:30:37,  2.45s/it]  1%|          | 228/21560 [09:53<14:29:23,  2.45s/it]  1%|          | 229/21560 [09:56<14:28:46,  2.44s/it]  1%|          | 230/21560 [09:58<14:27:55,  2.44s/it]                                                        1%|          | 230/21560 [09:58<14:27:55,  2.44s/it]  1%|          | 231/21560 [10:01<14:28:14,  2.44s/it]  1%|          | 232/21560 [10:03<14:29:01,  2.44s/it]  1%|          | 233/21560 [10:06<14:29:13,  2.45s/it]  1%|          | 234/21560 [10:08<14:30:01,  2.45s/it]  1%|          | 235/21560 [10:10<14:30:28,  2.45s/it]  1%|          | 236/21560 [10:13<14:29:34,  2.45s/it]  1%|          | 237/21560 [10:15<14:29:01,  2.45s/it]  1%|          | 238/21560 [10:18<14:28:37,  2.44s/it]  1%|          | 239/21560 [10:20<14:28:12,  2.44s/it]  1%|          | 240/21560 [10:23<14:28:03,  2.44s/it]                                                        1%|          | 240/21560 [10:23<14:28:03,  2.44s/it]  1%|          | 241/21560 [10:25<14:28:18,  2.44s/it]  1%|          | 242/21560 [10:28<14:28:31,  2.44s/it]  1%|          | 243/21560 [10:30<14:29:12,  2.45s/it]  1%|          | 244/21560 [10:32<14:29:27,  2.45s/it]  1%|          | 245/21560 [10:35<14:28:58,  2.45s/it]  1%|          | 246/21560 [10:37<14:29:16,  2.45s/it]  1%|          | 247/21560 [10:40<14:28:45,  2.45s/it]  1%|          | 248/21560 [10:42<14:28:26,  2.44s/it]  1%|          | 249/21560 [10:45<14:28:01,  2.44s/it]  1%|          | 250/21560 [10:47<14:27:32,  2.44s/it]                                                        1%|          | 250/21560 [10:47<14:27:32,  2.44s/it]  1%|          | 251/21560 [10:50<14:27:53,  2.44s/it]  1%|          | 252/21560 [10:52<14:27:22,  2.44s/it]  1%|          | 253/21560 [10:54<14:28:19,  2.45s/it]  1%|          | 254/21560 [10:57<14:27:54,  2.44s/it]  1%|          | 255/21560 [10:59<14:27:52,  2.44s/it]  1%|          | 256/21560 [11:02<14:28:20,  2.45s/it]  1%|          | 257/21560 [11:04<14:27:56,  2.44s/it]  1%|          | 258/21560 [11:07<14:27:24,  2.44s/it]  1%|          | 259/21560 [11:09<14:27:13,  2.44s/it]  1%|          | 260/21560 [11:12<14:27:12,  2.44s/it]                                                        1%|          | 260/21560 [11:12<14:27:12,  2.44s/it]  1%|          | 261/21560 [11:14<14:27:08,  2.44s/it]  1%|          | 262/21560 [11:16<14:26:47,  2.44s/it]  1%|          | 263/21560 [11:19<14:26:43,  2.44s/it]  1%|          | 264/21560 [11:21<14:26:52,  2.44s/it]  1%|          | 265/21560 [11:24<14:27:05,  2.44s/it]  1%|          | 266/21560 [11:26<14:27:16,  2.44s/it]  1%|          | 267/21560 [11:29<14:27:11,  2.44s/it]  1%|          | 268/21560 [11:31<14:26:51,  2.44s/it]  1%|          | 269/21560 [11:34<14:26:58,  2.44s/it]  1%|▏         | 270/21560 [11:36<14:26:41,  2.44s/it]                                                        1%|▏         | 270/21560 [11:36<14:26:41,  2.44s/it]  1%|▏         | 271/21560 [11:38<14:27:07,  2.44s/it]  1%|▏         | 272/21560 [11:41<14:26:41,  2.44s/it]  1%|▏         | 273/21560 [11:43<14:26:11,  2.44s/it]  1%|▏         | 274/21560 [11:46<14:25:44,  2.44s/it]  1%|▏         | 275/21560 [11:48<14:26:59,  2.44s/it]  1%|▏         | 276/21560 [11:51<14:28:12,  2.45s/it]  1%|▏         | 277/21560 [11:53<14:27:51,  2.45s/it]  1%|▏         | 278/21560 [11:56<14:29:12,  2.45s/it]  1%|▏         | 279/21560 [11:58<14:28:16,  2.45s/it]  1%|▏         | 280/21560 [12:00<14:27:52,  2.45s/it]                                                        1%|▏         | 280/21560 [12:00<14:27:52,  2.45s/it]  1%|▏         | 281/21560 [12:03<14:27:17,  2.45s/it]  1%|▏         | 282/21560 [12:05<14:26:44,  2.44s/it]  1%|▏         | 283/21560 [12:08<14:26:37,  2.44s/it]  1%|▏         | 284/21560 [12:10<14:26:51,  2.44s/it]  1%|▏         | 285/21560 [12:13<14:26:43,  2.44s/it]  1%|▏         | 286/21560 [12:15<14:26:35,  2.44s/it]  1%|▏         | 287/21560 [12:18<14:26:23,  2.44s/it]  1%|▏         | 288/21560 [12:20<14:27:11,  2.45s/it]  1%|▏         | 289/21560 [12:22<14:26:40,  2.44s/it]  1%|▏         | 290/21560 [12:25<14:26:22,  2.44s/it]                                                        1%|▏         | 290/21560 [12:25<14:26:22,  2.44s/it]  1%|▏         | 291/21560 [12:27<14:26:27,  2.44s/it]  1%|▏         | 292/21560 [12:30<14:26:34,  2.44s/it]  1%|▏         | 293/21560 [12:32<14:26:26,  2.44s/it]  1%|▏         | 294/21560 [12:35<14:26:29,  2.44s/it]  1%|▏         | 295/21560 [12:37<14:26:47,  2.45s/it]  1%|▏         | 296/21560 [12:40<14:26:49,  2.45s/it]  1%|▏         | 297/21560 [12:42<14:26:43,  2.45s/it]  1%|▏         | 298/21560 [12:44<14:27:21,  2.45s/it]  1%|▏         | 299/21560 [12:47<14:27:59,  2.45s/it]  1%|▏         | 300/21560 [12:49<14:29:17,  2.45s/it]                                                        1%|▏         | 300/21560 [12:49<14:29:17,  2.45s/it]  1%|▏         | 301/21560 [12:52<14:29:58,  2.46s/it]  1%|▏         | 302/21560 [12:54<14:29:08,  2.45s/it]  1%|▏         | 303/21560 [12:57<14:27:54,  2.45s/it]  1%|▏         | 304/21560 [12:59<14:27:14,  2.45s/it]  1%|▏         | 305/21560 [13:02<14:25:58,  2.44s/it]  1%|▏         | 306/21560 [13:04<14:25:15,  2.44s/it]  1%|▏         | 307/21560 [13:06<14:24:36,  2.44s/it]  1%|▏         | 308/21560 [13:09<14:24:15,  2.44s/it]  1%|▏         | 309/21560 [13:11<14:24:42,  2.44s/it]  1%|▏         | 310/21560 [13:14<14:24:48,  2.44s/it]                                                        1%|▏         | 310/21560 [13:14<14:24:48,  2.44s/it]  1%|▏         | 311/21560 [13:16<14:24:56,  2.44s/it]  1%|▏         | 312/21560 [13:19<14:24:56,  2.44s/it]  1%|▏         | 313/21560 [13:21<14:24:49,  2.44s/it]  1%|▏         | 314/21560 [13:24<14:24:47,  2.44s/it]  1%|▏         | 315/21560 [13:26<14:24:33,  2.44s/it]  1%|▏         | 316/21560 [13:28<14:24:30,  2.44s/it]  1%|▏         | 317/21560 [13:31<14:25:20,  2.44s/it]  1%|▏         | 318/21560 [13:33<14:25:01,  2.44s/it]  1%|▏         | 319/21560 [13:36<14:26:02,  2.45s/it]  1%|▏         | 320/21560 [13:38<14:25:38,  2.45s/it]                                                        1%|▏         | 320/21560 [13:38<14:25:38,  2.45s/it]  1%|▏         | 321/21560 [13:41<14:26:26,  2.45s/it]  1%|▏         | 322/21560 [13:43<14:25:52,  2.45s/it]  1%|▏         | 323/21560 [13:46<14:25:21,  2.44s/it]  2%|▏         | 324/21560 [13:48<14:24:59,  2.44s/it]  2%|▏         | 325/21560 [13:50<14:25:51,  2.45s/it]  2%|▏         | 326/21560 [13:53<14:24:59,  2.44s/it]  2%|▏         | 327/21560 [13:55<14:25:12,  2.44s/it]  2%|▏         | 328/21560 [13:58<14:25:09,  2.44s/it]  2%|▏         | 329/21560 [14:00<14:24:45,  2.44s/it]  2%|▏         | 330/21560 [14:03<14:24:21,  2.44s/it]                                                        2%|▏         | 330/21560 [14:03<14:24:21,  2.44s/it]  2%|▏         | 331/21560 [14:05<14:24:43,  2.44s/it]  2%|▏         | 332/21560 [14:08<14:24:21,  2.44s/it]  2%|▏         | 333/21560 [14:10<14:24:44,  2.44s/it]  2%|▏         | 334/21560 [14:12<14:24:34,  2.44s/it]  2%|▏         | 335/21560 [14:15<14:24:06,  2.44s/it]  2%|▏         | 336/21560 [14:17<14:25:32,  2.45s/it]  2%|▏         | 337/21560 [14:20<14:25:50,  2.45s/it]  2%|▏         | 338/21560 [14:22<14:25:15,  2.45s/it]  2%|▏         | 339/21560 [14:25<14:26:31,  2.45s/it]  2%|▏         | 340/21560 [14:27<14:26:24,  2.45s/it]                                                        2%|▏         | 340/21560 [14:27<14:26:24,  2.45s/it]  2%|▏         | 341/21560 [14:30<14:26:56,  2.45s/it]  2%|▏         | 342/21560 [14:32<14:25:54,  2.45s/it]  2%|▏         | 343/21560 [14:34<14:25:00,  2.45s/it]  2%|▏         | 344/21560 [14:37<14:24:22,  2.44s/it]  2%|▏         | 345/21560 [14:39<14:24:00,  2.44s/it]  2%|▏         | 346/21560 [14:42<14:24:15,  2.44s/it]  2%|▏         | 347/21560 [14:44<14:23:52,  2.44s/it]  2%|▏         | 348/21560 [14:47<14:24:20,  2.44s/it]  2%|▏         | 349/21560 [14:49<14:23:43,  2.44s/it]  2%|▏         | 350/21560 [14:52<14:24:12,  2.44s/it]                                                        2%|▏         | 350/21560 [14:52<14:24:12,  2.44s/it]  2%|▏         | 351/21560 [14:54<14:24:01,  2.44s/it]  2%|▏         | 352/21560 [14:56<14:23:29,  2.44s/it]  2%|▏         | 353/21560 [14:59<14:23:01,  2.44s/it]  2%|▏         | 354/21560 [15:01<14:23:57,  2.44s/it]  2%|▏         | 355/21560 [15:04<14:24:28,  2.45s/it]  2%|▏         | 356/21560 [15:06<14:24:09,  2.45s/it]  2%|▏         | 357/21560 [15:09<14:23:43,  2.44s/it]  2%|▏         | 358/21560 [15:11<14:23:07,  2.44s/it]  2%|▏         | 359/21560 [15:14<14:22:24,  2.44s/it]  2%|▏         | 360/21560 [15:16<14:21:41,  2.44s/it]                                                        2%|▏         | 360/21560 [15:16<14:21:41,  2.44s/it]  2%|▏         | 361/21560 [15:18<14:21:47,  2.44s/it]  2%|▏         | 362/21560 [15:21<14:21:57,  2.44s/it]  2%|▏         | 363/21560 [15:23<14:23:04,  2.44s/it]  2%|▏         | 364/21560 [15:26<14:22:53,  2.44s/it]  2%|▏         | 365/21560 [15:28<14:22:40,  2.44s/it]  2%|▏         | 366/21560 [15:31<14:22:43,  2.44s/it]  2%|▏         | 367/21560 [15:33<14:22:35,  2.44s/it]  2%|▏         | 368/21560 [15:36<14:23:13,  2.44s/it]  2%|▏         | 369/21560 [15:38<14:23:38,  2.45s/it]  2%|▏         | 370/21560 [15:40<14:22:57,  2.44s/it]                                                        2%|▏         | 370/21560 [15:40<14:22:57,  2.44s/it]  2%|▏         | 371/21560 [15:43<14:22:57,  2.44s/it]  2%|▏         | 372/21560 [15:45<14:22:50,  2.44s/it]  2%|▏         | 373/21560 [15:48<14:22:41,  2.44s/it]  2%|▏         | 374/21560 [15:50<14:23:40,  2.45s/it]  2%|▏         | 375/21560 [15:53<14:23:23,  2.45s/it]  2%|▏         | 376/21560 [15:55<14:23:28,  2.45s/it]  2%|▏         | 377/21560 [15:58<14:23:15,  2.45s/it]  2%|▏         | 378/21560 [16:00<14:24:16,  2.45s/it]  2%|▏         | 379/21560 [16:02<14:23:56,  2.45s/it]  2%|▏         | 380/21560 [16:05<14:23:21,  2.45s/it]                                                        2%|▏         | 380/21560 [16:05<14:23:21,  2.45s/it]  2%|▏         | 381/21560 [16:07<14:23:12,  2.45s/it]  2%|▏         | 382/21560 [16:10<14:22:41,  2.44s/it]  2%|▏         | 383/21560 [16:12<14:22:31,  2.44s/it]  2%|▏         | 384/21560 [16:15<14:22:58,  2.45s/it]  2%|▏         | 385/21560 [16:17<14:22:39,  2.44s/it]  2%|▏         | 386/21560 [16:20<14:22:29,  2.44s/it]  2%|▏         | 387/21560 [16:22<14:22:23,  2.44s/it]  2%|▏         | 388/21560 [16:24<14:22:19,  2.44s/it]  2%|▏         | 389/21560 [16:27<14:22:17,  2.44s/it]  2%|▏         | 390/21560 [16:29<14:22:00,  2.44s/it]                                                        2%|▏         | 390/21560 [16:29<14:22:00,  2.44s/it]  2%|▏         | 391/21560 [16:32<14:21:57,  2.44s/it]  2%|▏         | 392/21560 [16:34<14:22:47,  2.45s/it]  2%|▏         | 393/21560 [16:37<14:22:33,  2.45s/it]  2%|▏         | 394/21560 [16:39<14:22:16,  2.44s/it]  2%|▏         | 395/21560 [16:42<14:22:48,  2.45s/it]  2%|▏         | 396/21560 [16:44<14:22:17,  2.44s/it]  2%|▏         | 397/21560 [16:46<14:22:05,  2.44s/it]  2%|▏         | 398/21560 [16:49<14:21:56,  2.44s/it]  2%|▏         | 399/21560 [16:51<14:21:52,  2.44s/it]  2%|▏         | 400/21560 [16:54<14:22:07,  2.44s/it]                                                        2%|▏         | 400/21560 [16:54<14:22:07,  2.44s/it]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  input_ids = torch.tensor(input_ids, dtype=torch.long)
-
-  0%|          | 0/125 [00:00<?, ?it/s][A
-  2%|▏         | 2/125 [00:00<00:11, 10.69it/s][A
-  3%|▎         | 4/125 [00:00<00:18,  6.52it/s][A
-  4%|▍         | 5/125 [00:00<00:19,  6.06it/s][A
-  5%|▍         | 6/125 [00:00<00:20,  5.72it/s][A
-  6%|▌         | 7/125 [00:01<00:21,  5.55it/s][A
-  6%|▋         | 8/125 [00:01<00:21,  5.42it/s][A
-  7%|▋         | 9/125 [00:01<00:21,  5.33it/s][A
-  8%|▊         | 10/125 [00:01<00:21,  5.26it/s][A
-  9%|▉         | 11/125 [00:01<00:21,  5.23it/s][A
- 10%|▉         | 12/125 [00:02<00:21,  5.21it/s][A
- 10%|█         | 13/125 [00:02<00:21,  5.17it/s][A
- 11%|█         | 14/125 [00:02<00:21,  5.16it/s][A
- 12%|█▏        | 15/125 [00:02<00:21,  5.15it/s][A
- 13%|█▎        | 16/125 [00:02<00:21,  5.15it/s][A
- 14%|█▎        | 17/125 [00:03<00:20,  5.15it/s][A
- 14%|█▍        | 18/125 [00:03<00:20,  5.14it/s][A
- 15%|█▌        | 19/125 [00:03<00:20,  5.14it/s][A
- 16%|█▌        | 20/125 [00:03<00:20,  5.14it/s][A
- 17%|█▋        | 21/125 [00:03<00:20,  5.14it/s][A
- 18%|█▊        | 22/125 [00:04<00:20,  5.13it/s][A
- 18%|█▊        | 23/125 [00:04<00:19,  5.14it/s][A
- 19%|█▉        | 24/125 [00:04<00:19,  5.14it/s][A
- 20%|██        | 25/125 [00:04<00:19,  5.14it/s][A
- 21%|██        | 26/125 [00:04<00:19,  5.14it/s][A
- 22%|██▏       | 27/125 [00:05<00:19,  5.14it/s][A
- 22%|██▏       | 28/125 [00:05<00:18,  5.13it/s][A
- 23%|██▎       | 29/125 [00:05<00:18,  5.14it/s][A
- 24%|██▍       | 30/125 [00:05<00:18,  5.14it/s][A
- 25%|██▍       | 31/125 [00:05<00:18,  5.14it/s][A
- 26%|██▌       | 32/125 [00:06<00:18,  5.14it/s][A
- 26%|██▋       | 33/125 [00:06<00:17,  5.13it/s][A
- 27%|██▋       | 34/125 [00:06<00:17,  5.13it/s][A
- 28%|██▊       | 35/125 [00:06<00:17,  5.14it/s][A
- 29%|██▉       | 36/125 [00:06<00:17,  5.14it/s][A
- 30%|██▉       | 37/125 [00:07<00:17,  5.14it/s][A
- 30%|███       | 38/125 [00:07<00:16,  5.14it/s][A
- 31%|███       | 39/125 [00:07<00:16,  5.13it/s][A
- 32%|███▏      | 40/125 [00:07<00:16,  5.13it/s][A
- 33%|███▎      | 41/125 [00:07<00:16,  5.13it/s][A
- 34%|███▎      | 42/125 [00:07<00:16,  5.13it/s][A
- 34%|███▍      | 43/125 [00:08<00:15,  5.13it/s][A
- 35%|███▌      | 44/125 [00:08<00:15,  5.14it/s][A
- 36%|███▌      | 45/125 [00:08<00:15,  5.14it/s][A
- 37%|███▋      | 46/125 [00:08<00:15,  5.14it/s][A
- 38%|███▊      | 47/125 [00:08<00:15,  5.14it/s][A
- 38%|███▊      | 48/125 [00:09<00:14,  5.14it/s][A
- 39%|███▉      | 49/125 [00:09<00:14,  5.14it/s][A
- 40%|████      | 50/125 [00:09<00:14,  5.14it/s][A
- 41%|████      | 51/125 [00:09<00:14,  5.14it/s][A
- 42%|████▏     | 52/125 [00:09<00:14,  5.14it/s][A
- 42%|████▏     | 53/125 [00:10<00:14,  5.13it/s][A
- 43%|████▎     | 54/125 [00:10<00:13,  5.14it/s][A
- 44%|████▍     | 55/125 [00:10<00:13,  5.13it/s][A
- 45%|████▍     | 56/125 [00:10<00:13,  5.13it/s][A
- 46%|████▌     | 57/125 [00:10<00:13,  5.13it/s][A
- 46%|████▋     | 58/125 [00:11<00:13,  5.13it/s][A
- 47%|████▋     | 59/125 [00:11<00:12,  5.13it/s][A
- 48%|████▊     | 60/125 [00:11<00:12,  5.13it/s][A
- 49%|████▉     | 61/125 [00:11<00:12,  5.13it/s][A
- 50%|████▉     | 62/125 [00:11<00:12,  5.12it/s][A
- 50%|█████     | 63/125 [00:12<00:12,  5.14it/s][A
- 51%|█████     | 64/125 [00:12<00:11,  5.14it/s][A
- 52%|█████▏    | 65/125 [00:12<00:11,  5.14it/s][A
- 53%|█████▎    | 66/125 [00:12<00:11,  5.14it/s][A
- 54%|█████▎    | 67/125 [00:12<00:11,  5.13it/s][A
- 54%|█████▍    | 68/125 [00:13<00:11,  5.13it/s][A
- 55%|█████▌    | 69/125 [00:13<00:10,  5.13it/s][A
- 56%|█████▌    | 70/125 [00:13<00:10,  5.14it/s][A
- 57%|█████▋    | 71/125 [00:13<00:10,  5.13it/s][A
- 58%|█████▊    | 72/125 [00:13<00:10,  5.14it/s][A
- 58%|█████▊    | 73/125 [00:14<00:10,  5.14it/s][A
- 59%|█████▉    | 74/125 [00:14<00:09,  5.14it/s][A
- 60%|██████    | 75/125 [00:14<00:09,  5.08it/s][A
- 61%|██████    | 76/125 [00:14<00:09,  5.10it/s][A
- 62%|██████▏   | 77/125 [00:14<00:09,  5.11it/s][A
- 62%|██████▏   | 78/125 [00:14<00:09,  5.12it/s][A
- 63%|██████▎   | 79/125 [00:15<00:08,  5.12it/s][A
- 64%|██████▍   | 80/125 [00:15<00:08,  5.13it/s][A
- 65%|██████▍   | 81/125 [00:15<00:08,  5.13it/s][A
- 66%|██████▌   | 82/125 [00:15<00:08,  5.13it/s][A
- 66%|██████▋   | 83/125 [00:15<00:08,  5.13it/s][A
- 67%|██████▋   | 84/125 [00:16<00:07,  5.13it/s][A
- 68%|██████▊   | 85/125 [00:16<00:07,  5.13it/s][A
- 69%|██████▉   | 86/125 [00:16<00:07,  5.14it/s][A
- 70%|██████▉   | 87/125 [00:16<00:07,  5.13it/s][A
- 70%|███████   | 88/125 [00:16<00:07,  5.12it/s][A
- 71%|███████   | 89/125 [00:17<00:07,  5.12it/s][A
- 72%|███████▏  | 90/125 [00:17<00:06,  5.11it/s][A
- 73%|███████▎  | 91/125 [00:17<00:06,  5.11it/s][A
- 74%|███████▎  | 92/125 [00:17<00:06,  5.13it/s][A
- 74%|███████▍  | 93/125 [00:17<00:06,  5.13it/s][A
- 75%|███████▌  | 94/125 [00:18<00:06,  5.13it/s][A
- 76%|███████▌  | 95/125 [00:18<00:05,  5.13it/s][A
- 77%|███████▋  | 96/125 [00:18<00:05,  5.13it/s][A
- 78%|███████▊  | 97/125 [00:18<00:05,  5.13it/s][A
- 78%|███████▊  | 98/125 [00:18<00:05,  5.13it/s][A
- 79%|███████▉  | 99/125 [00:19<00:05,  5.13it/s][A
- 80%|████████  | 100/125 [00:19<00:04,  5.13it/s][A
- 81%|████████  | 101/125 [00:19<00:04,  5.13it/s][A
- 82%|████████▏ | 102/125 [00:19<00:04,  5.13it/s][A
- 82%|████████▏ | 103/125 [00:19<00:04,  5.13it/s][A
- 83%|████████▎ | 104/125 [00:20<00:04,  5.13it/s][A
- 84%|████████▍ | 105/125 [00:20<00:03,  5.13it/s][A
- 85%|████████▍ | 106/125 [00:20<00:03,  5.13it/s][A
- 86%|████████▌ | 107/125 [00:20<00:03,  5.15it/s][A
- 86%|████████▋ | 108/125 [00:20<00:03,  5.14it/s][A
- 87%|████████▋ | 109/125 [00:21<00:03,  5.15it/s][A
- 88%|████████▊ | 110/125 [00:21<00:02,  5.14it/s][A
- 89%|████████▉ | 111/125 [00:21<00:02,  5.14it/s][A
- 90%|████████▉ | 112/125 [00:21<00:02,  5.14it/s][A
- 90%|█████████ | 113/125 [00:21<00:02,  5.15it/s][A
- 91%|█████████ | 114/125 [00:22<00:02,  5.13it/s][A
- 92%|█████████▏| 115/125 [00:22<00:01,  5.14it/s][A
- 93%|█████████▎| 116/125 [00:22<00:01,  5.14it/s][A
- 94%|█████████▎| 117/125 [00:22<00:01,  5.14it/s][A
- 94%|█████████▍| 118/125 [00:22<00:01,  5.14it/s][A
- 95%|█████████▌| 119/125 [00:22<00:01,  5.14it/s][A
- 96%|█████████▌| 120/125 [00:23<00:00,  5.12it/s][A
- 97%|█████████▋| 121/125 [00:23<00:00,  5.13it/s][A
- 98%|█████████▊| 122/125 [00:23<00:00,  5.12it/s][A
- 98%|█████████▊| 123/125 [00:23<00:00,  5.13it/s][A
- 99%|█████████▉| 124/125 [00:23<00:00,  5.13it/s][A
-100%|██████████| 125/125 [00:24<00:00,  4.62it/s][A                                                      
-                                                 [A  2%|▏         | 400/21560 [17:18<14:22:07,  2.44s/it]
-100%|██████████| 125/125 [00:24<00:00,  4.62it/s][A
-                                                 [A  2%|▏         | 401/21560 [17:21<57:49:38,  9.84s/it]  2%|▏         | 402/21560 [17:23<44:46:53,  7.62s/it]  2%|▏         | 403/21560 [17:26<35:39:02,  6.07s/it]  2%|▏         | 404/21560 [17:28<29:15:59,  4.98s/it]  2%|▏         | 405/21560 [17:31<24:47:09,  4.22s/it]  2%|▏         | 406/21560 [17:33<21:39:15,  3.69s/it]  2%|▏         | 407/21560 [17:36<19:28:06,  3.31s/it]  2%|▏         | 408/21560 [17:38<17:56:15,  3.05s/it]  2%|▏         | 409/21560 [17:40<16:51:50,  2.87s/it]  2%|▏         | 410/21560 [17:43<16:06:29,  2.74s/it]                                                        2%|▏         | 410/21560 [17:43<16:06:29,  2.74s/it]  2%|▏         | 411/21560 [17:45<15:36:10,  2.66s/it]  2%|▏         | 412/21560 [17:48<15:13:40,  2.59s/it]  2%|▏         | 413/21560 [17:50<14:57:52,  2.55s/it]  2%|▏         | 414/21560 [17:53<14:46:41,  2.52s/it]  2%|▏         | 415/21560 [17:55<14:38:55,  2.49s/it]  2%|▏         | 416/21560 [17:58<14:32:48,  2.48s/it]  2%|▏         | 417/21560 [18:00<14:28:42,  2.47s/it]  2%|▏         | 418/21560 [18:02<14:25:42,  2.46s/it]  2%|▏         | 419/21560 [18:05<14:23:31,  2.45s/it]  2%|▏         | 420/21560 [18:07<14:21:46,  2.45s/it]                                                        2%|▏         | 420/21560 [18:07<14:21:46,  2.45s/it]  2%|▏         | 421/21560 [18:10<14:21:04,  2.44s/it]  2%|▏         | 422/21560 [18:12<14:20:26,  2.44s/it]  2%|▏         | 423/21560 [18:15<14:20:17,  2.44s/it]  2%|▏         | 424/21560 [18:17<14:20:17,  2.44s/it]  2%|▏         | 425/21560 [18:19<14:20:05,  2.44s/it]  2%|▏         | 426/21560 [18:22<14:21:12,  2.44s/it]  2%|▏         | 427/21560 [18:24<14:20:10,  2.44s/it]  2%|▏         | 428/21560 [18:27<14:19:48,  2.44s/it]  2%|▏         | 429/21560 [18:29<14:19:59,  2.44s/it]Traceback (most recent call last):
-  File "/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py", line 243, in <module>
-    main()
-  File "/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py", line 235, in main
-    trainer.train()
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2052, in train
-    return inner_training_loop(
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2388, in _inner_training_loop
-    tr_loss_step = self.training_step(model, inputs)
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 3518, in training_step
-    self.accelerator.backward(loss, **kwargs)
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/accelerator.py", line 2233, in backward
-    self.deepspeed_engine_wrapped.backward(loss, **kwargs)
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/utils/deepspeed.py", line 186, in backward
-    self.engine.backward(loss, **kwargs)
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/utils/nvtx.py", line 18, in wrapped_fn
-    ret_val = func(*args, **kwargs)
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/runtime/engine.py", line 2020, in backward
-    self.optimizer.backward(loss, retain_graph=retain_graph)
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 2064, in backward
-    self.loss_scaler.backward(loss.float(), retain_graph=retain_graph)
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/runtime/fp16/loss_scaler.py", line 63, in backward
-    scaled_loss.backward(retain_graph=retain_graph)
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/_tensor.py", line 521, in backward
-    torch.autograd.backward(
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/autograd/__init__.py", line 289, in backward
-    _engine_run_backward(
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/autograd/graph.py", line 769, in _engine_run_backward
-    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
-KeyboardInterrupt
-[rank0]: Traceback (most recent call last):
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py", line 243, in <module>
-[rank0]:     main()
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py", line 235, in main
-[rank0]:     trainer.train()
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2052, in train
-[rank0]:     return inner_training_loop(
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2388, in _inner_training_loop
-[rank0]:     tr_loss_step = self.training_step(model, inputs)
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 3518, in training_step
-[rank0]:     self.accelerator.backward(loss, **kwargs)
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/accelerator.py", line 2233, in backward
-[rank0]:     self.deepspeed_engine_wrapped.backward(loss, **kwargs)
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/utils/deepspeed.py", line 186, in backward
-[rank0]:     self.engine.backward(loss, **kwargs)
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/utils/nvtx.py", line 18, in wrapped_fn
-[rank0]:     ret_val = func(*args, **kwargs)
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/runtime/engine.py", line 2020, in backward
-[rank0]:     self.optimizer.backward(loss, retain_graph=retain_graph)
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 2064, in backward
-[rank0]:     self.loss_scaler.backward(loss.float(), retain_graph=retain_graph)
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/runtime/fp16/loss_scaler.py", line 63, in backward
-[rank0]:     scaled_loss.backward(retain_graph=retain_graph)
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/_tensor.py", line 521, in backward
-[rank0]:     torch.autograd.backward(
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/autograd/__init__.py", line 289, in backward
-[rank0]:     _engine_run_backward(
-[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/autograd/graph.py", line 769, in _engine_run_backward
-[rank0]:     return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
-[rank0]: KeyboardInterrupt
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-W0522 00:19:56.046825 140663215924224 torch/distributed/elastic/multiprocessing/api.py:858] Sending process 494848 closing signal SIGTERM
-E0522 00:19:56.512309 140663215924224 torch/distributed/elastic/multiprocessing/api.py:833] failed (exitcode: -2) local_rank: 0 (pid: 494847) of binary: /mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/bin/python3.9
-Traceback (most recent call last):
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/bin/torchrun", line 8, in <module>
-    sys.exit(main())
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 348, in wrapper
-    return f(*args, **kwargs)
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/distributed/run.py", line 901, in main
-    run(args)
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/distributed/run.py", line 892, in run
-    elastic_launch(
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 133, in __call__
-    return launch_agent(self._config, self._entrypoint, list(args))
-  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 264, in launch_agent
-    raise ChildFailedError(
-torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
-======================================================
-finetune_offline.py FAILED
-------------------------------------------------------
-Failures:
-  <NO_OTHER_FAILURES>
-------------------------------------------------------
-Root Cause (first observed failure):
-[0]:
-  time      : 2025-05-22_00:19:56
-  host      : aisurrey26.surrey.ac.uk
-  rank      : 0 (local_rank: 0)
-  exitcode  : -2 (pid: 494847)
-  error_file: <N/A>
-  traceback : Signal 2 (SIGINT) received by PID 494847
-======================================================
