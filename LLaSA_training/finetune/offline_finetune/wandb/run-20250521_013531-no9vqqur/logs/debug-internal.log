@@ -1,0 +1,12 @@
+{"time":"2025-05-21T01:35:31.317354017+01:00","level":"INFO","msg":"using version","core version":"0.18.1"}
+{"time":"2025-05-21T01:35:31.317480033+01:00","level":"INFO","msg":"created symlink","path":"/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/wandb/run-20250521_013531-no9vqqur/logs/debug-core.log"}
+{"time":"2025-05-21T01:35:31.318153378+01:00","level":"INFO","msg":"using version","core version":"0.18.1"}
+{"time":"2025-05-21T01:35:31.318454965+01:00","level":"INFO","msg":"created symlink","path":"/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/wandb/run-20250521_013531-no9vqqur/logs/debug-core.log"}
+{"time":"2025-05-21T01:35:31.325641695+01:00","level":"INFO","msg":"created new stream","id":"no9vqqur"}
+{"time":"2025-05-21T01:35:31.325993035+01:00","level":"INFO","msg":"stream: started","id":"no9vqqur"}
+{"time":"2025-05-21T01:35:31.326006921+01:00","level":"INFO","msg":"writer: Do: started","stream_id":{"value":"no9vqqur"}}
+{"time":"2025-05-21T01:35:31.326053138+01:00","level":"INFO","msg":"handler: started","stream_id":{"value":"no9vqqur"}}
+{"time":"2025-05-21T01:35:31.326071582+01:00","level":"INFO","msg":"sender: started","stream_id":{"value":"no9vqqur"}}
+{"time":"2025-05-21T01:35:31.738392894+01:00","level":"INFO","msg":"wandb-core","!BADKEY":null}
+{"time":"2025-05-21T01:35:31.740472961+01:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-05-22T00:53:18.262504456+01:00","level":"INFO","msg":"api: retrying HTTP request, no error or response"}

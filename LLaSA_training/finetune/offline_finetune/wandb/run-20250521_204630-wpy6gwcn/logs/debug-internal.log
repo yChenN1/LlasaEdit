@@ -1,0 +1,14 @@
+{"time":"2025-05-21T20:46:30.400351014+01:00","level":"INFO","msg":"using version","core version":"0.18.1"}
+{"time":"2025-05-21T20:46:30.400480606+01:00","level":"INFO","msg":"created symlink","path":"/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/wandb/run-20250521_204630-wpy6gwcn/logs/debug-core.log"}
+{"time":"2025-05-21T20:46:30.400763242+01:00","level":"INFO","msg":"using version","core version":"0.18.1"}
+{"time":"2025-05-21T20:46:30.400888486+01:00","level":"INFO","msg":"created symlink","path":"/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/wandb/run-20250521_204630-wpy6gwcn/logs/debug-core.log"}
+{"time":"2025-05-21T20:46:30.405702889+01:00","level":"INFO","msg":"created new stream","id":"wpy6gwcn"}
+{"time":"2025-05-21T20:46:30.405836018+01:00","level":"INFO","msg":"stream: started","id":"wpy6gwcn"}
+{"time":"2025-05-21T20:46:30.405870702+01:00","level":"INFO","msg":"handler: started","stream_id":{"value":"wpy6gwcn"}}
+{"time":"2025-05-21T20:46:30.406057009+01:00","level":"INFO","msg":"sender: started","stream_id":{"value":"wpy6gwcn"}}
+{"time":"2025-05-21T20:46:30.405865142+01:00","level":"INFO","msg":"writer: Do: started","stream_id":{"value":"wpy6gwcn"}}
+{"time":"2025-05-21T20:46:30.778644753+01:00","level":"INFO","msg":"wandb-core","!BADKEY":null}
+{"time":"2025-05-21T20:46:30.781139312+01:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-05-21T20:46:37.878891145+01:00","level":"INFO","msg":"stream: closing","id":"wpy6gwcn"}
+{"time":"2025-05-21T20:46:37.878962729+01:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-05-21T20:46:37.879737723+01:00","level":"INFO","msg":"Stopped system monitor"}

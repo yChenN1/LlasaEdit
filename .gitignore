@@ -1,0 +1,8 @@
+# 忽略 wandb 和 slurm_run 目录
+./LLaSA_training/finetune/offline_finetune/wandb/
+./LLaSA_training/finetune/offline_finetune/slurm_run/
+
+# 忽略所有文件，除了根目录下的 .py 和文件夹
+./*
+!./*.py
+!*./

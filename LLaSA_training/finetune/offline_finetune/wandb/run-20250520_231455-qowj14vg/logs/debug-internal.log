@@ -1,0 +1,18 @@
+{"time":"2025-05-20T23:14:55.161707916+01:00","level":"INFO","msg":"using version","core version":"0.18.1"}
+{"time":"2025-05-20T23:14:55.161847756+01:00","level":"INFO","msg":"created symlink","path":"/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/wandb/run-20250520_231455-qowj14vg/logs/debug-core.log"}
+{"time":"2025-05-20T23:14:55.162136005+01:00","level":"INFO","msg":"using version","core version":"0.18.1"}
+{"time":"2025-05-20T23:14:55.162254774+01:00","level":"INFO","msg":"created symlink","path":"/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/wandb/run-20250520_231455-qowj14vg/logs/debug-core.log"}
+{"time":"2025-05-20T23:14:55.188102253+01:00","level":"INFO","msg":"created new stream","id":"qowj14vg"}
+{"time":"2025-05-20T23:14:55.188329512+01:00","level":"INFO","msg":"stream: started","id":"qowj14vg"}
+{"time":"2025-05-20T23:14:55.188446542+01:00","level":"INFO","msg":"handler: started","stream_id":{"value":"qowj14vg"}}
+{"time":"2025-05-20T23:14:55.188598101+01:00","level":"INFO","msg":"sender: started","stream_id":{"value":"qowj14vg"}}
+{"time":"2025-05-20T23:14:55.188342832+01:00","level":"INFO","msg":"writer: Do: started","stream_id":{"value":"qowj14vg"}}
+{"time":"2025-05-20T23:14:55.54507255+01:00","level":"INFO","msg":"wandb-core","!BADKEY":null}
+{"time":"2025-05-20T23:14:55.547944458+01:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-05-20T23:14:58.452585356+01:00","level":"INFO","msg":"stream: closing","id":"qowj14vg"}
+{"time":"2025-05-20T23:14:58.452630425+01:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-05-20T23:14:58.459468926+01:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-05-20T23:14:59.305231564+01:00","level":"INFO","msg":"handler: closed","stream_id":{"value":"qowj14vg"}}
+{"time":"2025-05-20T23:14:59.305294214+01:00","level":"INFO","msg":"writer: Close: closed","stream_id":{"value":"qowj14vg"}}
+{"time":"2025-05-20T23:14:59.305392944+01:00","level":"INFO","msg":"sender: closed","stream_id":{"value":"qowj14vg"}}
+{"time":"2025-05-20T23:14:59.305807302+01:00","level":"INFO","msg":"stream: closed","id":"qowj14vg"}

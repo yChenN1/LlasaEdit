@@ -1,0 +1,168 @@
+                                                                                                                                                                                                                                            
+{'loss': 7.2592, 'grad_norm': 1.7081847190856934, 'learning_rate': 0.0001455901203190861, 'epoch': 0.0}
+{'loss': 7.1812, 'grad_norm': 2.109668493270874, 'learning_rate': 0.0001849016636724994, 'epoch': 0.0}
+{'loss': 7.096, 'grad_norm': 2.4591944217681885, 'learning_rate': 0.00020789744237972014, 'epoch': 0.0}
+{'loss': 7.0771, 'grad_norm': 2.5745484828948975, 'learning_rate': 0.00022421320702591262, 'epoch': 0.0}
+{'loss': 6.9516, 'grad_norm': 2.6957292556762695, 'learning_rate': 0.0002368686972847589, 'epoch': 0.0}
+{'loss': 6.8825, 'grad_norm': 2.366323947906494, 'learning_rate': 0.00024720898573313337, 'epoch': 0.0}
+{'loss': 6.9621, 'grad_norm': 2.7660956382751465, 'learning_rate': 0.00025595157504597175, 'epoch': 0.0}
+{'loss': 6.8831, 'grad_norm': 2.548274278640747, 'learning_rate': 0.0002635247503793259, 'epoch': 0.0}
+{'loss': 6.8863, 'grad_norm': 2.577125072479248, 'learning_rate': 0.0002702047644403542, 'epoch': 0.01}
+{'loss': 6.8969, 'grad_norm': 2.895054340362549, 'learning_rate': 0.0002761802406381722, 'epoch': 0.01}
+{'loss': 6.9428, 'grad_norm': 2.6722331047058105, 'learning_rate': 0.0002815857163733149, 'epoch': 0.01}
+{'loss': 6.9404, 'grad_norm': 2.2539916038513184, 'learning_rate': 0.00028652052908654667, 'epoch': 0.01}
+{'loss': 6.8868, 'grad_norm': 2.804905891418457, 'learning_rate': 0.000291060116725482, 'epoch': 0.01}
+{'loss': 6.8171, 'grad_norm': 2.3172426223754883, 'learning_rate': 0.00029526311839938495, 'epoch': 0.01}
+{'loss': 6.7458, 'grad_norm': 2.1748101711273193, 'learning_rate': 0.000299176019345393, 'epoch': 0.01}
+{'loss': 6.7627, 'grad_norm': 2.2098679542541504, 'learning_rate': 0.00030283629373273915, 'epoch': 0.01}
+{'loss': 6.8139, 'grad_norm': 2.1087300777435303, 'learning_rate': 0.0003062745930083646, 'epoch': 0.01}
+{'loss': 6.7976, 'grad_norm': 2.33252215385437, 'learning_rate': 0.00030951630779376744, 'epoch': 0.01}
+{'loss': 6.786, 'grad_norm': 2.7709686756134033, 'learning_rate': 0.0003125827069259807, 'epoch': 0.01}
+{'loss': 6.8355, 'grad_norm': 2.287956714630127, 'learning_rate': 0.00031549178399158546, 'epoch': 0.01}
+{'loss': 6.7397, 'grad_norm': 2.2877562046051025, 'learning_rate': 0.00031825889710660577, 'epoch': 0.01}
+{'loss': 6.8052, 'grad_norm': 2.164177179336548, 'learning_rate': 0.0003208972597267282, 'epoch': 0.01}
+{'loss': 6.8137, 'grad_norm': 2.1816811561584473, 'learning_rate': 0.0003234183222664723, 'epoch': 0.01}
+{'loss': 6.8387, 'grad_norm': 2.2100908756256104, 'learning_rate': 0.0003258320724399599, 'epoch': 0.01}
+{'loss': 6.7526, 'grad_norm': 2.2583420276641846, 'learning_rate': 0.0003281472742504317, 'epoch': 0.01}
+{'loss': 6.742, 'grad_norm': 2.161802053451538, 'learning_rate': 0.0003303716600788953, 'epoch': 0.02}
+{'loss': 6.6636, 'grad_norm': 2.117745876312256, 'learning_rate': 0.00033251208650098826, 'epoch': 0.02}
+{'loss': 6.6577, 'grad_norm': 2.195368528366089, 'learning_rate': 0.00033457466175279826, 'epoch': 0.02}
+{'loss': 6.7731, 'grad_norm': 1.9535677433013916, 'learning_rate': 0.0003365648508191014, 'epoch': 0.02}
+{'loss': 6.6757, 'grad_norm': 2.4481992721557617, 'learning_rate': 0.0003384875626988062, 'epoch': 0.02}
+{'loss': 6.6692, 'grad_norm': 2.325204849243164, 'learning_rate': 0.00034034722335617986, 'epoch': 0.02}
+{'loss': 6.7419, 'grad_norm': 2.615396022796631, 'learning_rate': 0.00034214783708615246, 'epoch': 0.02}
+{'loss': 6.6181, 'grad_norm': 2.423569679260254, 'learning_rate': 0.0003438930384339489, 'epoch': 0.02}
+{'loss': 6.7902, 'grad_norm': 2.1047308444976807, 'learning_rate': 0.0003455861363617779, 'epoch': 0.02}
+{'loss': 6.7423, 'grad_norm': 2.3490214347839355, 'learning_rate': 0.00034723015201164456, 'epoch': 0.02}
+{'loss': 6.7169, 'grad_norm': 1.9530726671218872, 'learning_rate': 0.00034882785114718074, 'epoch': 0.02}
+{'loss': 6.6749, 'grad_norm': 2.066842555999756, 'learning_rate': 0.0003503817721495932, 'epoch': 0.02}
+{'loss': 6.6791, 'grad_norm': 2.229149341583252, 'learning_rate': 0.00035189425027939395, 'epoch': 0.02}
+{'loss': 6.6505, 'grad_norm': 1.9802201986312866, 'learning_rate': 0.0003533674387861161, 'epoch': 0.02}
+{'loss': 6.754, 'grad_norm': 2.187795877456665, 'learning_rate': 0.00035480332734499876, 'epoch': 0.02}
+{'loss': 6.7884, 'grad_norm': 2.3215982913970947, 'learning_rate': 0.00035620375821679613, 'epoch': 0.02}
+{'loss': 6.6886, 'grad_norm': 2.141214609146118, 'learning_rate': 0.0003575704404600191, 'epoch': 0.02}
+{'loss': 6.7041, 'grad_norm': 2.055126905441284, 'learning_rate': 0.0003589049624706561, 'epoch': 0.02}
+{'loss': 6.6948, 'grad_norm': 2.0822396278381348, 'learning_rate': 0.0003602088030801414, 'epoch': 0.03}
+{'loss': 6.7256, 'grad_norm': 2.554021120071411, 'learning_rate': 0.000361483341406027, 'epoch': 0.03}
+{'loss': 6.6825, 'grad_norm': 2.0608205795288086, 'learning_rate': 0.0003627298656198856, 'epoch': 0.03}
+{'loss': 6.7092, 'grad_norm': 2.380430221557617, 'learning_rate': 0.0003639495807721976, 'epoch': 0.03}
+{'loss': 6.6955, 'grad_norm': 2.040367841720581, 'learning_rate': 0.0003651436157933732, 'epoch': 0.03}
+{'loss': 6.7739, 'grad_norm': 2.358900547027588, 'learning_rate': 0.0003663130297728574, 'epoch': 0.03}
+{'loss': 6.6219, 'grad_norm': 2.3067526817321777, 'learning_rate': 0.000367458817603845, 'epoch': 0.03}
+{'loss': 6.6935, 'grad_norm': 2.326857328414917, 'learning_rate': 0.00036858191506899864, 'epoch': 0.03}
+{'loss': 6.6135, 'grad_norm': 2.2529242038726807, 'learning_rate': 0.0003696832034323086, 'epoch': 0.03}
+{'loss': 6.6778, 'grad_norm': 2.6866207122802734, 'learning_rate': 0.00037076351359354993, 'epoch': 0.03}
+{'loss': 6.661, 'grad_norm': 2.4091804027557373, 'learning_rate': 0.00037182362985440157, 'epoch': 0.03}
+{'loss': 6.6268, 'grad_norm': 2.243051528930664, 'learning_rate': 0.00037286429333898764, 'epoch': 0.03}
+{'loss': 6.6442, 'grad_norm': 2.3004350662231445, 'learning_rate': 0.00037388620510621156, 'epoch': 0.03}
+{'loss': 6.6205, 'grad_norm': 1.9931180477142334, 'learning_rate': 0.0003748900289866147, 'epoch': 0.03}
+{'loss': 6.7098, 'grad_norm': 2.265604019165039, 'learning_rate': 0.0003758763941725147, 'epoch': 0.03}
+{'loss': 6.6405, 'grad_norm': 2.3419559001922607, 'learning_rate': 0.00037684589758672934, 'epoch': 0.03}
+{'loss': 6.6468, 'grad_norm': 2.3902833461761475, 'learning_rate': 0.00037779910605221953, 'epoch': 0.03}
+{'loss': 6.6488, 'grad_norm': 2.3529160022735596, 'learning_rate': 0.00037873655828239635, 'epoch': 0.04}
+{'loss': 6.7432, 'grad_norm': 2.22566294670105, 'learning_rate': 0.00037965876670959317, 'epoch': 0.04}
+{'loss': 6.5752, 'grad_norm': 2.064385414123535, 'learning_rate': 0.00038056621916723985, 'epoch': 0.04}
+{'loss': 6.6265, 'grad_norm': 2.4045257568359375, 'learning_rate': 0.00038145938043956576, 'epoch': 0.04}
+{'loss': 6.6463, 'grad_norm': 2.031702995300293, 'learning_rate': 0.0003823386936911549, 'epoch': 0.04}
+{'loss': 6.5657, 'grad_norm': 2.1211090087890625, 'learning_rate': 0.00038320458178736215, 'epoch': 0.04}
+{'loss': 6.7238, 'grad_norm': 2.2409749031066895, 'learning_rate': 0.0003840574485154384, 'epoch': 0.04}
+{'loss': 6.6155, 'grad_norm': 2.7530136108398438, 'learning_rate': 0.0003848976797151911, 'epoch': 0.04}
+{'loss': 6.6308, 'grad_norm': 2.516774892807007, 'learning_rate': 0.00038572564432710633, 'epoch': 0.04}
+{'loss': 6.665, 'grad_norm': 2.0282721519470215, 'learning_rate': 0.00038654169536505786, 'epoch': 0.04}
+{'loss': 6.6408, 'grad_norm': 2.0511491298675537, 'learning_rate': 0.00038734617082002284, 'epoch': 0.04}
+{'loss': 6.5256, 'grad_norm': 2.120999813079834, 'learning_rate': 0.00038813939450059405, 'epoch': 0.04}
+{'loss': 6.6222, 'grad_norm': 2.2619428634643555, 'learning_rate': 0.0003889216768155201, 'epoch': 0.04}
+{'loss': 6.6685, 'grad_norm': 2.0831737518310547, 'learning_rate': 0.0003896933155030065, 'epoch': 0.04}
+{'loss': 6.5729, 'grad_norm': 2.2566416263580322, 'learning_rate': 0.0003904545963110658, 'epoch': 0.04}
+{'loss': 6.547, 'grad_norm': 2.547617197036743, 'learning_rate': 0.00039120579363280725, 'epoch': 0.04}
+{'loss': 6.6262, 'grad_norm': 2.419353723526001, 'learning_rate': 0.00039194717110020043, 'epoch': 0.04}
+{'loss': 6.6047, 'grad_norm': 1.9758894443511963, 'learning_rate': 0.00039267898213952936, 'epoch': 0.05}
+{'loss': 6.5897, 'grad_norm': 2.2381553649902344, 'learning_rate': 0.00039340147049146223, 'epoch': 0.05}
+{'loss': 6.5658, 'grad_norm': 2.148643970489502, 'learning_rate': 0.000394114870698412, 'epoch': 0.05}
+{'loss': 6.6053, 'grad_norm': 2.034599781036377, 'learning_rate': 0.0003948194085616222, 'epoch': 0.05}
+{'loss': 6.5757, 'grad_norm': 2.0520670413970947, 'learning_rate': 0.0003955153015702093, 'epoch': 0.05}
+{'loss': 6.5479, 'grad_norm': 2.171782970428467, 'learning_rate': 0.0003962027593041998, 'epoch': 0.05}
+{'loss': 6.6259, 'grad_norm': 2.0141701698303223, 'learning_rate': 0.00039688198381343233, 'epoch': 0.05}
+{'loss': 6.4888, 'grad_norm': 2.2527971267700195, 'learning_rate': 0.00039755316997403743, 'epoch': 0.05}
+{'loss': 6.5695, 'grad_norm': 2.332869291305542, 'learning_rate': 0.0003982165058240693, 'epoch': 0.05}
+{'loss': 6.6517, 'grad_norm': 2.445281744003296, 'learning_rate': 0.0003988721728797354, 'epoch': 0.05}
+{'loss': 6.6298, 'grad_norm': 2.287632703781128, 'learning_rate': 0.0003995203464335547, 'epoch': 0.05}
+{'loss': 6.6603, 'grad_norm': 2.306425094604492, 'learning_rate': 0.0004001611958356693, 'epoch': 0.05}
+{'loss': 6.5626, 'grad_norm': 2.4421603679656982, 'learning_rate': 0.0004007948847594403, 'epoch': 0.05}
+{'loss': 6.5766, 'grad_norm': 2.102248430252075, 'learning_rate': 0.00040142157145236764, 'epoch': 0.05}
+{'loss': 6.5462, 'grad_norm': 2.128742218017578, 'learning_rate': 0.0004020414089732988, 'epoch': 0.05}
+{'loss': 6.6383, 'grad_norm': 2.191452741622925, 'learning_rate': 0.00040265454541681383, 'epoch': 0.05}
+{'loss': 6.5579, 'grad_norm': 2.311828851699829, 'learning_rate': 0.0004032611241256109, 'epoch': 0.05}
+{'loss': 6.5969, 'grad_norm': 2.127978801727295, 'learning_rate': 0.0004038612838916535, 'epoch': 0.06}
+{'loss': 6.6115, 'grad_norm': 2.5820367336273193, 'learning_rate': 0.00040445515914678653, 'epoch': 0.06}
+{'loss': 6.6348, 'grad_norm': 2.0789237022399902, 'learning_rate': 0.0004050428801434744, 'epoch': 0.06}
+{'loss': 6.6238, 'grad_norm': 2.1823675632476807, 'learning_rate': 0.0004056245731262706, 'epoch': 0.06}
+{'loss': 6.6048, 'grad_norm': 2.1613097190856934, 'learning_rate': 0.0004062003604945829, 'epoch': 0.06}
+{'loss': 6.5691, 'grad_norm': 1.927140474319458, 'learning_rate': 0.0004067703609572583, 'epoch': 0.06}
+{'loss': 6.4973, 'grad_norm': 2.2322895526885986, 'learning_rate': 0.00040733468967947735, 'epoch': 0.06}
+{'loss': 6.5952, 'grad_norm': 2.267354965209961, 'learning_rate': 0.00040789345842241195, 'epoch': 0.06}
+{'loss': 6.5856, 'grad_norm': 2.213643789291382, 'learning_rate': 0.0004084467756760699, 'epoch': 0.06}
+{'loss': 6.5949, 'grad_norm': 2.4531054496765137, 'learning_rate': 0.0004089947467857219, 'epoch': 0.06}
+{'loss': 6.5945, 'grad_norm': 2.531174898147583, 'learning_rate': 0.00040953747407227863, 'epoch': 0.06}
+{'loss': 6.6275, 'grad_norm': 2.546926975250244, 'learning_rate': 0.00041007505694696324, 'epoch': 0.06}
+{'loss': 6.5296, 'grad_norm': 2.3306562900543213, 'learning_rate': 0.0004106075920205991, 'epoch': 0.06}
+{'loss': 6.5555, 'grad_norm': 2.4587395191192627, 'learning_rate': 0.0004111351732078148, 'epoch': 0.06}
+  File "/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline_lora.py", line 228, in <module>
+    main()
+  File "/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline_lora.py", line 223, in main
+    trainer.train()
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2052, in train
+    return inner_training_loop(
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2388, in _inner_training_loop
+    tr_loss_step = self.training_step(model, inputs)
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 3518, in training_step
+    self.accelerator.backward(loss, **kwargs)
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/accelerator.py", line 2233, in backward
+    self.deepspeed_engine_wrapped.backward(loss, **kwargs)
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/utils/deepspeed.py", line 186, in backward
+    self.engine.backward(loss, **kwargs)
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/utils/nvtx.py", line 18, in wrapped_fn
+    ret_val = func(*args, **kwargs)
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/runtime/engine.py", line 2020, in backward
+    self.optimizer.backward(loss, retain_graph=retain_graph)
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 2064, in backward
+    self.loss_scaler.backward(loss.float(), retain_graph=retain_graph)
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/runtime/fp16/loss_scaler.py", line 63, in backward
+    scaled_loss.backward(retain_graph=retain_graph)
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/_tensor.py", line 521, in backward
+    torch.autograd.backward(
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/autograd/__init__.py", line 289, in backward
+    _engine_run_backward(
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/autograd/graph.py", line 769, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+KeyboardInterrupt
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline_lora.py", line 228, in <module>
+[rank0]:     main()
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline_lora.py", line 223, in main
+[rank0]:     trainer.train()
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2052, in train
+[rank0]:     return inner_training_loop(
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2388, in _inner_training_loop
+[rank0]:     tr_loss_step = self.training_step(model, inputs)
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 3518, in training_step
+[rank0]:     self.accelerator.backward(loss, **kwargs)
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/accelerator.py", line 2233, in backward
+[rank0]:     self.deepspeed_engine_wrapped.backward(loss, **kwargs)
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/utils/deepspeed.py", line 186, in backward
+[rank0]:     self.engine.backward(loss, **kwargs)
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/utils/nvtx.py", line 18, in wrapped_fn
+[rank0]:     ret_val = func(*args, **kwargs)
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/runtime/engine.py", line 2020, in backward
+[rank0]:     self.optimizer.backward(loss, retain_graph=retain_graph)
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 2064, in backward
+[rank0]:     self.loss_scaler.backward(loss.float(), retain_graph=retain_graph)
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/deepspeed/runtime/fp16/loss_scaler.py", line 63, in backward
+[rank0]:     scaled_loss.backward(retain_graph=retain_graph)
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/_tensor.py", line 521, in backward
+[rank0]:     torch.autograd.backward(
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/autograd/__init__.py", line 289, in backward
+[rank0]:     _engine_run_backward(
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/torch/autograd/graph.py", line 769, in _engine_run_backward
+[rank0]:     return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[rank0]: KeyboardInterrupt

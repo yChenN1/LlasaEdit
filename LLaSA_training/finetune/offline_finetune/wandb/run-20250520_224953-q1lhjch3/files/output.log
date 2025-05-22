@@ -1,0 +1,75 @@
+  2%|█▋                                                                        | 200/8624 [10:27<5:36:30,  2.40s/it]Traceback (most recent call last):
+{'loss': 7.2367, 'grad_norm': 9.465301513671875, 'learning_rate': 4.319392925972796e-06, 'epoch': 0.0}
+{'loss': 6.9969, 'grad_norm': 7.620229244232178, 'learning_rate': 5.529350761050224e-06, 'epoch': 0.0}
+{'loss': 6.9397, 'grad_norm': 6.446399211883545, 'learning_rate': 6.237130722024273e-06, 'epoch': 0.01}
+{'loss': 6.79, 'grad_norm': 6.580521583557129, 'learning_rate': 6.739308596127651e-06, 'epoch': 0.01}
+{'loss': 6.771, 'grad_norm': 6.782767295837402, 'learning_rate': 7.128828016868164e-06, 'epoch': 0.01}
+  File "/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py", line 243, in <module>
+{'eval_loss': 6.753796577453613, 'eval_runtime': 48.8189, 'eval_samples_per_second': 20.484, 'eval_steps_per_second': 5.121, 'epoch': 0.01}
+{'loss': 6.7499, 'grad_norm': 6.687004089355469, 'learning_rate': 7.447088557101699e-06, 'epoch': 0.01}
+{'loss': 6.6391, 'grad_norm': 7.019619941711426, 'learning_rate': 7.716174009759574e-06, 'epoch': 0.02}
+{'loss': 6.6349, 'grad_norm': 7.478658676147461, 'learning_rate': 7.949266431205077e-06, 'epoch': 0.02}
+{'loss': 6.6358, 'grad_norm': 7.114618301391602, 'learning_rate': 8.154868518075748e-06, 'epoch': 0.02}
+{'loss': 6.6038, 'grad_norm': 6.3866286277771, 'learning_rate': 8.338785851945594e-06, 'epoch': 0.02}
+{'eval_loss': 6.620396137237549, 'eval_runtime': 49.0522, 'eval_samples_per_second': 20.386, 'eval_steps_per_second': 5.097, 'epoch': 0.02}
+{'loss': 6.6148, 'grad_norm': 6.853638648986816, 'learning_rate': 8.505159317857581e-06, 'epoch': 0.03}
+{'loss': 6.602, 'grad_norm': 7.1341447830200195, 'learning_rate': 8.657046392179125e-06, 'epoch': 0.03}
+{'loss': 6.5776, 'grad_norm': 6.949645042419434, 'learning_rate': 8.796768956169318e-06, 'epoch': 0.03}
+{'loss': 6.5263, 'grad_norm': 7.608990669250488, 'learning_rate': 8.926131844837001e-06, 'epoch': 0.03}
+{'loss': 6.5269, 'grad_norm': 7.60750675201416, 'learning_rate': 9.04656581291964e-06, 'epoch': 0.03}
+{'eval_loss': 6.531113624572754, 'eval_runtime': 49.0675, 'eval_samples_per_second': 20.38, 'eval_steps_per_second': 5.095, 'epoch': 0.03}
+{'loss': 6.5237, 'grad_norm': 7.01746129989624, 'learning_rate': 9.159224266282506e-06, 'epoch': 0.04}
+{'loss': 6.4984, 'grad_norm': 7.974321365356445, 'learning_rate': 9.265050616331488e-06, 'epoch': 0.04}
+{'loss': 6.4836, 'grad_norm': 7.109310150146484, 'learning_rate': 9.364826353153174e-06, 'epoch': 0.04}
+{'loss': 6.4575, 'grad_norm': 7.2769951820373535, 'learning_rate': 9.459206103704836e-06, 'epoch': 0.04}
+{'loss': 6.4578, 'grad_norm': 7.07003116607666, 'learning_rate': 9.54874368702302e-06, 'epoch': 0.05}
+    main()
+  File "/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py", line 235, in main
+    trainer.train()
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2052, in train
+    return inner_training_loop(
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2467, in _inner_training_loop
+    self._maybe_log_save_evaluate(tr_loss, grad_norm, model, trial, epoch, ignore_keys_for_eval)
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2915, in _maybe_log_save_evaluate
+    metrics = self._evaluate(trial, ignore_keys_for_eval)
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2872, in _evaluate
+    metrics = self.evaluate(ignore_keys=ignore_keys_for_eval)
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 3868, in evaluate
+    output = eval_loop(
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 4051, in evaluation_loop
+    for step, inputs in enumerate(dataloader):
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/data_loader.py", line 561, in __iter__
+    current_batch = send_to_device(current_batch, self.device, non_blocking=self._non_blocking)
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/utils/operations.py", line 184, in send_to_device
+    {
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/utils/operations.py", line 185, in <dictcomp>
+    k: t if k in skip_keys else send_to_device(t, device, non_blocking=non_blocking, skip_keys=skip_keys)
+  File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/utils/operations.py", line 156, in send_to_device
+    return tensor.to(device, non_blocking=non_blocking)
+KeyboardInterrupt
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py", line 243, in <module>
+[rank0]:     main()
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/code/llasa/LLaSA_training/finetune/offline_finetune/finetune_offline.py", line 235, in main
+[rank0]:     trainer.train()
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2052, in train
+[rank0]:     return inner_training_loop(
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2467, in _inner_training_loop
+[rank0]:     self._maybe_log_save_evaluate(tr_loss, grad_norm, model, trial, epoch, ignore_keys_for_eval)
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2915, in _maybe_log_save_evaluate
+[rank0]:     metrics = self._evaluate(trial, ignore_keys_for_eval)
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 2872, in _evaluate
+[rank0]:     metrics = self.evaluate(ignore_keys=ignore_keys_for_eval)
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 3868, in evaluate
+[rank0]:     output = eval_loop(
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/transformers/trainer.py", line 4051, in evaluation_loop
+[rank0]:     for step, inputs in enumerate(dataloader):
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/data_loader.py", line 561, in __iter__
+[rank0]:     current_batch = send_to_device(current_batch, self.device, non_blocking=self._non_blocking)
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/utils/operations.py", line 184, in send_to_device
+[rank0]:     {
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/utils/operations.py", line 185, in <dictcomp>
+[rank0]:     k: t if k in skip_keys else send_to_device(t, device, non_blocking=non_blocking, skip_keys=skip_keys)
+[rank0]:   File "/mnt/fast/nobackup/users/yc01815/anaconda3/envs/llasa/lib/python3.9/site-packages/accelerate/utils/operations.py", line 156, in send_to_device
+[rank0]:     return tensor.to(device, non_blocking=non_blocking)
+[rank0]: KeyboardInterrupt

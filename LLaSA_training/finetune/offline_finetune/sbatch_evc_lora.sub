@@ -1,0 +1,33 @@
+#!/bin/sh
+
+#SBATCH --job-name="lora_llasa_evc"
+#SBATCH --partition=a100
+#SBATCH --gpus=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=2
+#SBATCH --mem=200G
+#SBATCH --time=03-00:00:00 
+#SBATCH -o slurm_run/lora_slurm.%N.%j.out 
+#SBATCH -e slurm_run/lora_slurm.%N.%j.err
+
+# Load modules if needed (optional)
+# module load cuda/12.6
+# module load gcc/11.4
+
+# Activate your conda environment
+source ~/.bashrc
+conda activate llasa
+
+# CUDA & GCC paths
+export CUDA_HOME=$HOME/cuda-12.6
+export PATH=$CUDA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+
+export CC=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-gcc
+export CXX=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-g++
+
+# Optional: allow unsupported compiler for nvcc
+export NVCC_FLAGS="--allow-unsupported-compiler"
+
+# Launch training
+torchrun --nproc_per_node=1 --master-port 10201 finetune_offline_lora.py
