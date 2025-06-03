@@ -1,21 +1,25 @@
 import os
+import sys
 import torch
-import soundfile as sf
+import librosa
 import numpy as np
 import pandas as pd
+import soundfile as sf
 from tqdm import tqdm
 from pathlib import Path
-from transformers import AutoTokenizer, AutoModelForCausalLM
-from xcodec2.modeling_xcodec2 import XCodec2Model
 from datetime import datetime
+from transformers import AutoTokenizer, AutoModelForCausalLM
+sys.path.append('/mnt/fast/nobackup/users/yc01815/code/xcodec2')
+from vq_process import load_models, extract_vq_code, reconstruct_from_vq_code
+
+import warnings
+warnings.filterwarnings("ignore")
 
 # === Load Models ===
-llasa_1b = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/finetune_lora/EVC_0521/checkpoint-100000'
+llasa_1b = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/finetune/EVC_0521/checkpoint-20000'
+# llasa_1b ='HKUSTAudio/Llasa-1B'
 tokenizer = AutoTokenizer.from_pretrained(llasa_1b)
 llm_model = AutoModelForCausalLM.from_pretrained(llasa_1b).eval().cuda()
-
-codec_path = "HKUSTAudio/xcodec2"
-codec_model = XCodec2Model.from_pretrained(codec_path).eval().cuda()
 
 
 # === Helper Functions ===
@@ -70,24 +74,25 @@ speech_understanding_end_id = tokenizer.convert_tokens_to_ids('<|SPEECH_UNDERSTA
 eos_token_id = tokenizer.convert_tokens_to_ids('<|SPEECH_GENERATION_END|>')
 
 # === test xcodec2 ability ===
-'''
-audio_path = "/mnt/fast/nobackup/scratch4weeks/yc01815/Emotion_Speech_Dataset/English/0012/Angry/0012_000351.wav"
-wav, sr = sf.read(audio_path)
-assert sr == 16000, "Only supports 16kHz audio"
 
-# === Encode Audio to Speech Tokens ===
-wav_tensor = torch.from_numpy(wav).float().unsqueeze(0).cuda()  # Shape: (1, T)
-with torch.no_grad():
-    vq_code = codec_model.encode_code(input_waveform=wav_tensor)  # (1, 1, T_code)
-speech_ids = vq_code[0, 0].cpu().numpy()
-# speech_token_str = ids_to_tokens(speech_ids)
+# audio_path = "/mnt/fast/nobackup/scratch4weeks/yc01815/Emotion_Speech_Dataset/English/0012/Angry/0012_000351.wav"
+# wav, sr = librosa.load(audio_path, sr=16000)
+# assert sr == 16000, "Only supports 16kHz audio"
 
-# === Save Reconstructed Original Audio ===
-org_token_tensor = torch.tensor(speech_ids).cuda().unsqueeze(0).unsqueeze(0)
-with torch.no_grad():
-    org_wav = codec_model.decode_code(org_token_tensor)  # (1, 1, T)
-sf.write("reconstructed_org.wav", org_wav[0, 0].cpu().numpy(), 16000)
-'''
+# # === Encode Audio to Speech Tokens ===
+# wav_tensor = torch.from_numpy(wav).float().unsqueeze(0).cuda()  # Shape: (1, T)
+# with torch.no_grad():
+#     vq_code = extract_vq_code(wav)  # (1, 1, T_code)
+# speech_ids = vq_code[0, 0].cpu().numpy()
+# # speech_token_str = ids_to_tokens(speech_ids)
+
+# # === Save Reconstructed Original Audio ===
+# org_token_tensor = torch.tensor(speech_ids).cuda().unsqueeze(0).unsqueeze(0)
+# with torch.no_grad():
+#     org_wav =reconstruct_from_vq_code(org_token_tensor)  # (1, 1, T)
+# sf.write("reconstructed_org.wav", org_wav, 16000)
+
+# assert False
 
 # === Input: eval audio set ===
 audio_eval_path = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/ESD_bin_reprocess/val_combined.csv'
@@ -117,11 +122,10 @@ os.makedirs(save_path, exist_ok=True)
 for audio in tqdm(eval_list):
     audio_path = f"{base_path}/{audio['source']}"
     instruct = audio['instruct']
-    wav, sr = sf.read(audio_path)
+    wav, sr = librosa.load(audio_path, sr=16000)
     assert sr == 16000, "Only supports 16kHz audio"
-    wav_tensor = torch.from_numpy(wav).float().unsqueeze(0).cuda()  # Shape: (1, T)
     with torch.no_grad():
-        vq_code = codec_model.encode_code(input_waveform=wav_tensor)  # (1, 1, T_code)
+        vq_code = extract_vq_code(wav)  # (1, 1, T_code)
     speech_ids = vq_code[0, 0].cpu().numpy() + 128256 + 8
 
     # === Generate New Speech Tokens ===
@@ -151,16 +155,17 @@ for audio in tqdm(eval_list):
             top_p=1.0,
             temperature=0.8
         )
+    __import__('ipdb').set_trace()
 
     generated_ids = outputs[0][input_ids.shape[1]:-1]
     gen_tokens_str = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
     gen_speech_ids = extract_speech_ids(gen_tokens_str)
-
+    
     # === Decode Generated Tokens ===
     gen_token_tensor = torch.tensor(gen_speech_ids).cuda().unsqueeze(0).unsqueeze(0)
     with torch.no_grad():
-        gen_wav = codec_model.decode_code(gen_token_tensor)  # (1, 1, T)
-    sf.write(f"{save_path}/{Path(audio_path).stem}_{audio_path.split('/')[-2]}_to_{instruct.split(' ')[-1]}wav", gen_wav[0, 0].cpu().numpy(), 16000)
+        gen_wav = reconstruct_from_vq_code(gen_token_tensor)  # (1, 1, T)
+    sf.write(f"{save_path}/{Path(audio_path).stem}_{audio_path.split('/')[-2]}_to_{instruct.split(' ')[-1]}wav", gen_wav, 16000)
 
 
     

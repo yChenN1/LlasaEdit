@@ -1,14 +1,14 @@
 #!/bin/sh
 
-#SBATCH --job-name="lora_llasa_evc"
+#SBATCH --job-name="llasa_evc"
 #SBATCH --partition=a100
 #SBATCH --gpus=1
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=2
 #SBATCH --mem=200G
 #SBATCH --time=03-00:00:00 
-#SBATCH -o slurm_run/lora_slurm.%N.%j.out 
-#SBATCH -e slurm_run/lora_slurm.%N.%j.err
+#SBATCH -o slurm_run/slurm.%N.%j.out 
+#SBATCH -e slurm_run/slurm.%N.%j.err
 
 # Load modules if needed (optional)
 # module load cuda/12.6
@@ -31,4 +31,6 @@ export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$CONDA_PREFIX/x86_64-conda-linux-gnu/li
 export NVCC_FLAGS="--allow-unsupported-compiler"
 
 # Launch training
-torchrun --nproc_per_node=1 --master-port 10201 finetune_offline_lora.py
+# torchrun --nproc_per_node=1 --master-port 10203 finetune_offline_w_rl.py
+# torchrun --nproc_per_node=2 --master-port 10203 finetune_offline.py
+deepspeed --num_gpus=1 finetune_offline_w_rl.py

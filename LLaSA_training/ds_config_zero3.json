@@ -20,16 +20,6 @@
         }
     },
 
-    "scheduler": {
-        "type": "WarmupCosineLR",
-        "params": {
-            "total_num_steps": "auto",
-            "warmup_min_ratio": 0.03,
-            "warmup_num_steps": "auto",
-            "cos_min_ratio": 0.1
-        }
-    },
-
     "zero_optimization": {
         "stage": 3,
         "offload_optimizer": {
