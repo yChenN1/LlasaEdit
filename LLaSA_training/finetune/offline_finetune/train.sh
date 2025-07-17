@@ -15,5 +15,5 @@ export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$CONDA_PREFIX/x86_64-conda-linux-gnu/li
 export NVCC_FLAGS="--allow-unsupported-compiler"
 
 # Launch training with torchrun
-# torchrun --nproc_per_node=1 --master-port=10203 finetune_offline.py
-deepspeed --num_gpus=4 finetune_offline_w_rl.py
+torchrun --nproc_per_node=1 --master-port=10202 finetune_offline.py
+# deepspeed --num_gpus=4 finetune_offline_w_rl.py

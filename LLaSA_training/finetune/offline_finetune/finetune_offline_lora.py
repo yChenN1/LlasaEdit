@@ -13,7 +13,7 @@ from transformers import (
     default_data_collator,
 )
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Literal
 import sys
 import transformers
 import wandb
@@ -52,6 +52,8 @@ class CustomTrainingArguments(TrainingArguments):
     )
     gradient_checkpointing: bool = field(default=True)
     lr_scheduler_type: str = field(default="cosine", metadata={"help": "The learning rate scheduler to use."})
+    evaluation_strategy: Literal["no", "steps", "epoch"] = field(default="no", metadata={"help": "The evaluation strategy to use."})
+
 
 class TTSDataset(Dataset):
     def __init__(self, data_path, split, tokenizer):
@@ -64,8 +66,9 @@ class TTSDataset(Dataset):
         self.length = self.input_ids.shape[0]
         self.pad_token_id = tokenizer.pad_token_id   
         self.tokenizer = tokenizer
-        self.instuct = pd.read_csv(instruct_path, header=0)['instruct'].tolist()
-
+        instruct_path = os.path.join(data_path, f'{split}_data.csv')
+        
+        self.instuct = pd.read_csv(instruct_path, header=0)['trg_instruct'].tolist()
         self.speech_generation_start_id = tokenizer.convert_tokens_to_ids('<|SPEECH_GENERATION_START|>')
         self.speech_generation_end_id = tokenizer.convert_tokens_to_ids('<|SPEECH_GENERATION_END|>')
         self.text_generation_start_id = tokenizer.convert_tokens_to_ids('<|TEXT_GENERATION_START|>')
@@ -96,6 +99,7 @@ class TTSDataset(Dataset):
         input_ids = torch.tensor(self.input_ids[idx], dtype=torch.long)
         labels = torch.full_like(input_ids, self.ignore_index)
         instruct = self.instuct[idx]
+
 
         speech_gen_positions = (input_ids == self.speech_generation_start_id).nonzero(as_tuple=True)[0]
         text_gen_positions = (input_ids == self.text_generation_start_id).nonzero(as_tuple=True)[0]
@@ -203,9 +207,9 @@ def main():
     _ = train_dataset[0]
     eval_dataset = TTSDataset(
         data_path=data_args.data_path,
-        split='val',
+        split='valid',
         tokenizer=tokenizer
-    ) if os.path.exists(os.path.join(data_args.data_path, 'val_input_ids.memmap')) else None
+    ) if os.path.exists(os.path.join(data_args.data_path, 'valid_input_ids.memmap')) else None
 
     data_collator = default_data_collator
 

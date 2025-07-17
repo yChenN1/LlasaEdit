@@ -1,0 +1,38 @@
+#!/bin/bash
+
+#SBATCH --job-name="vq_extract"
+#SBATCH --partition=3090_risk
+#SBATCH --gpus=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=2
+#SBATCH --mem=200G
+#SBATCH --time=03-00:00:00 
+#SBATCH -o slurm_run/vq_extract.%N.%j.out 
+#SBATCH -e slurm_run/vq_extract.%N.%j.err
+
+# ====== Load environment ======
+source ~/.bashrc
+conda activate llasa
+
+export CUDA_HOME=$HOME/cuda-12.6
+export PATH=$CUDA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+
+export CC=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-gcc
+export CXX=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-g++
+export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$CONDA_PREFIX/x86_64-conda-linux-gnu/lib:$CONDA_PREFIX/lib/gcc/x86_64-conda-linux-gnu/12.4.0:$LD_LIBRARY_PATH
+
+# ====== Parse --target argument ======
+TARGET=""
+for arg in "$@"; do
+  if [[ $prev_arg == "--target" ]]; then
+    TARGET=$arg
+  fi
+  prev_arg=$arg
+done
+
+# ====== Run Python script with full args ======
+echo "[INFO] Extracting VQ codes for target=$TARGET"
+echo "[INFO] Full args: $@"
+
+python process_vq.py "$@"

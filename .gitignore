@@ -1,9 +1,22 @@
-# 忽略 wandb 和 slurm_run 目录
-LLaSA_training/finetune/offline_finetune/wandb/
-LLaSA_training/finetune/offline_finetune/slurm_run/
+# 忽略 wandb 和 slurm_run 文件夹（所有层级）
+wandb/
+**/wandb/
+slurm_run/
+**/slurm_run/
 
-/*
-!/*.py
-!*/
+# 忽略日志和错误输出
+*.out
+*.err
 
+# 忽略所有 .wav 文件
+*.wav
+**/*.wav
+
+# 忽略所有文件（默认忽略机制）
+# 下面两行组合用于排除所有非 .py 文件（如有特殊需要才用）
+# /*
+# !*.py
+
+# 保留所有 .py 文件（这条只有你开启了 /* 过滤才需要）
+# !*/            # 让 .py 文件夹结构可见
 

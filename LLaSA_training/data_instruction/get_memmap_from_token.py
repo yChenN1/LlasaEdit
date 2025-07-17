@@ -45,6 +45,7 @@ def process_audio_id(audio_id):
     instruct = audio_id['instruction']
     src_audio_root = f"{audio_id['src_path']}"
     trg_audio_root = f"{audio_id['trg_path']}"
+    transcript = audio_id['transcription']
 
     '''
     input transcription
@@ -57,6 +58,16 @@ def process_audio_id(audio_id):
     )
     text_input_ids = encoded_text['input_ids'].squeeze(0)  # (text_len,)
     '''
+
+    # input audio
+    text_with_special = f"<|TEXT_GENERATION_START|>{transcript}<|TEXT_GENERATION_END|>"
+    encoded_text = tokenizer.encode_plus(
+        text_with_special,
+        add_special_tokens=False,
+        return_tensors='np'
+    )
+    text_input_ids = encoded_text['input_ids'].squeeze(0)  # (text_len,)
+
 
     # input audio
     speech_under_start_id = tokenizer.convert_tokens_to_ids('<|SPEECH_UNDERSTANDING_START|>')
@@ -77,7 +88,9 @@ def process_audio_id(audio_id):
         dtype=np.int32
     )
  
-    total_input_ids = np.concatenate([audio_input_ids, code_input_ids])
+    # total_input_ids = np.concatenate([audio_input_ids, code_input_ids])
+    # total_input_ids = np.concatenate([audio_input_ids, code_input_ids, text_input_ids])  # ESD_bin_reprocess_v2
+    total_input_ids = np.concatenate([audio_input_ids, text_input_ids, code_input_ids])  # ESD_bin_reprocess_v3
  
     if len(total_input_ids) > max_seq_len:
         total_input_ids = total_input_ids[:max_seq_len]
@@ -90,7 +103,7 @@ def process_audio_id(audio_id):
             constant_values=tokenizer.pad_token_id
         )
 
-    return {'input_id': total_input_ids.astype(np.int32), 'instruction': instruct, "audio_path": {'src_path': src_audio_root, 'trg_path': trg_audio_root}}
+    return {'input_id': total_input_ids.astype(np.int32), 'instruction': instruct, "audio_path": {'src_path': src_audio_root, 'trg_path': trg_audio_root}, 'transcript': transcript}
 
 def process_data(code_root, meta_data, output_dir_tts, num_processes=4):
     max_seq_len = 2048
@@ -112,7 +125,7 @@ def process_data(code_root, meta_data, output_dir_tts, num_processes=4):
     tokenizer.add_tokens(special_tokens)
     special_token_ids = tokenizer.convert_tokens_to_ids(special_tokens)
  
-    base_num = len(tokenizer)
+   
 
     audio_ids = pd.read_csv(meta_data, header=0).to_dict(orient='records')
     random.shuffle(audio_ids)
@@ -136,6 +149,7 @@ def process_data(code_root, meta_data, output_dir_tts, num_processes=4):
     train_tts_input_ids_list = [res['input_id'] for res in results if res is not None]
     train_instruct_list = [res['instruction'] for res in results if res is not None]
     train_audio_list = [{'source_path': res['audio_path']['src_path'], 'target_path': res['audio_path']['trg_path']} for res in results if res is not None]
+    train_transcription_list = [res['transcript'] for res in results if res is not None]
     
     init_worker(code_root, meta_data, tokenizer, max_seq_len, base_num)
     val_tts_input_ids_list = []
@@ -146,7 +160,7 @@ def process_data(code_root, meta_data, output_dir_tts, num_processes=4):
         if res is not None:
             val_tts_input_ids_list.append(res['input_id'])
             val_instruct_list.append(res['instruction'])
-            val_audio_list.append({'source_path': res['audio_path']['src_path'], 'target_path': res['audio_path']['trg_path']})
+            val_audio_list.append({'source_path': res['audio_path']['src_path'], 'target_path': res['audio_path']['trg_path'], 'transcription': res['transcript']})
     
     if not (train_tts_input_ids_list or val_tts_input_ids_list):
         print("bug ")
@@ -184,28 +198,31 @@ def process_data(code_root, meta_data, output_dir_tts, num_processes=4):
     train_combined = pd.DataFrame({
         'source': [audio['source_path'] for audio in train_audio_list],
         'target': [audio['target_path'] for audio in train_audio_list],
-        'instruct': train_instruct_list
+        'instruct': train_instruct_list,
+        'transcription': train_transcription_list
     })
     train_combined.to_csv(os.path.join(output_dir_tts, 'train_combined.csv'), index=False)
 
     val_combined = pd.DataFrame({
         'source': [audio['source_path'] for audio in val_audio_list],
         'target': [audio['target_path'] for audio in val_audio_list],
-        'instruct': val_instruct_list
+        'instruct': val_instruct_list,
+        'transcription': [audio['transcription'] for audio in val_audio_list]
     })
+
     val_combined.to_csv(os.path.join(output_dir_tts, 'val_combined.csv'), index=False)
 
 
     np.save(os.path.join(output_dir_tts, 'train_input_ids_shape.npy'), train_tts_input_ids_array.shape)
     np.save(os.path.join(output_dir_tts, 'val_input_ids_shape.npy'), val_tts_input_ids_array.shape)
 
-    print(f" TTS memmap  saved ! {output_dir_tts}")
+    print(f"TTS memmap saved! {output_dir_tts}")
 
 if __name__ == "__main__":
  
     code_root = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/vq_code'
     meta_data = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/paired_emotion_with_instruct2.csv'
-    output_dir_tts = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/ESD_bin_reprocess'
+    output_dir_tts = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/ESD_bin_reprocess_v5'
  
     num_processes = 8
 

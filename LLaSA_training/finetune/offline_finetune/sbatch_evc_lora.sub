@@ -1,8 +1,8 @@
 #!/bin/sh
 
-#SBATCH --job-name="lora_llasa_evc"
+#SBATCH --job-name="lora_llasa"
 #SBATCH --partition=a100
-#SBATCH --gpus=1
+#SBATCH --gpus=2
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=2
 #SBATCH --mem=200G
@@ -31,4 +31,4 @@ export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$CONDA_PREFIX/x86_64-conda-linux-gnu/li
 export NVCC_FLAGS="--allow-unsupported-compiler"
 
 # Launch training
-torchrun --nproc_per_node=1 --master-port 10201 finetune_offline_lora.py
+torchrun --nproc_per_node=2 --master-port 10202 finetune_offline_lora.py

@@ -1,0 +1,36 @@
+#!/bin/sh
+
+#SBATCH --job-name="llasa_Etts"
+#SBATCH --partition=a100
+#SBATCH --gpus=2
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=2
+#SBATCH --mem=200G
+#SBATCH --time=03-00:00:00 
+#SBATCH -o slurm_run/slurm.%N.%j.out 
+#SBATCH -e slurm_run/slurm.%N.%j.err
+
+# Load modules if needed (optional)
+# module load cuda/12.6
+# module load gcc/11.4
+
+# Activate your conda environment
+source ~/.bashrc
+conda activate llasa
+
+# CUDA & GCC paths
+export CUDA_HOME=$HOME/cuda-12.6
+export PATH=$CUDA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+
+export CC=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-gcc
+export CXX=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-g++
+export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$CONDA_PREFIX/x86_64-conda-linux-gnu/lib:$CONDA_PREFIX/lib/gcc/x86_64-conda-linux-gnu/12.4.0:$LD_LIBRARY_PATH
+
+# Optional: allow unsupported compiler for nvcc
+export NVCC_FLAGS="--allow-unsupported-compiler"
+
+# Launch training
+# torchrun --nproc_per_node=1 --master-port 10203 finetune_offline_w_rl.py
+torchrun --nproc_per_node=2 --master-port 20212 finetune_online.py
+

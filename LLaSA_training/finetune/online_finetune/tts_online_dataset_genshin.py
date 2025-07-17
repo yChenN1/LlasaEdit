@@ -17,7 +17,7 @@ import numpy as np
 
 # Adapt the dataset to the new format
 class WaveDataset(torch.utils.data.Dataset):
-    def __init__(self, data, sampling_rate, tokenizer, audio_norm_scale: float = 1.0, root_dir: str = "", max_audio_duration: float = 41.0):
+    def __init__(self, data, sampling_rate, tokenizer, audio_norm_scale: float = 1.0, root_dir: str = "", max_audio_duration: float = 41.0, use_instruction=False):
         """
         data: A list of data entries, each containing 'audio', 'transcription', 'speaker', etc.
         tokenizer: A tokenizer used to convert text into tokens.
@@ -31,6 +31,7 @@ class WaveDataset(torch.utils.data.Dataset):
         self.feature_extractor = AutoFeatureExtractor.from_pretrained("facebook/w2v-bert-2.0")
         self.tokenizer = tokenizer
         self.max_audio_frames = int(max_audio_duration * self.sampling_rate)  # Maximum number of frames for the given max duration
+        self.use_instruction = use_instruction
     
     def __len__(self):
         # Each record corresponds to one sample
@@ -38,9 +39,9 @@ class WaveDataset(torch.utils.data.Dataset):
     
     def __getitem__(self, index):
         item = self.data[index]
-        transcription = item['transcription']
-        speaker = item['speaker']  # 'speaker' directly from the dataset
-        audio_array = item['audio']['array']
+        transcription = item['text']
+        # speaker = item['speaker']  # 'speaker' directly from the dataset
+        audio_array = torch.tensor(item['audio']['array'])
         if audio_array.ndim == 1:
             audio = torch.tensor(audio_array, dtype=torch.float).unsqueeze(0)
         else:
@@ -77,19 +78,33 @@ class WaveDataset(torch.utils.data.Dataset):
         
         # Prepare the text for tokenization
         text_with_special = f"<|TEXT_UNDERSTANDING_START|>{transcription}<|TEXT_UNDERSTANDING_END|>"
-        chat = [
-            {"role": "user", "content": "Convert the text to speech:" + text_with_special},
-            {"role": "assistant", "content": f"Speaker {speaker}"}
-        ]
+        if not self.use_instruction:
+            chat = [
+                {"role": "user", "content": "Convert the text to speech:" + text_with_special},
+                # {"role": "assistant", "content": f"Speaker {speaker}"}
+            ]
+        else:
+            style_instruction = item['caption']
+            chat = [
+                {"role": "system", "content": "You are a helpful speech assistant. Your job is to generate speech that matches the provided style instruction as closely as possible."},
+                {
+                "role": "user",
+                "content": (
+                    "Convert the following text to speech based on the given style instruction.\n\n"
+                    "Instruction: {instruction}\n\n"
+                    "Text: {text}"
+                ).format(instruction=style_instruction, text=text_with_special)
+                }
+            ]
         text_tokens = self.tokenizer.apply_chat_template(chat, tokenize=True, continue_final_message=True)
         text_tokens = torch.tensor(text_tokens, dtype=torch.long)
         text_length = text_tokens.size(0)
         
         # Return all the data
-        return audio, feat, audio_length, text_tokens, text_length, speaker
+        return audio, feat, audio_length, text_tokens, text_length
 
 def pad_audio_batch(batch):
-    audio_list, feat_list, audio_length_list, text_tokens_list, text_length_list, speaker_list = zip(*batch)
+    audio_list, feat_list, audio_length_list, text_tokens_list, text_length_list = zip(*batch)
     
     # Pad audio
     max_length_feat = max(feat.shape[1] for feat in feat_list)
@@ -134,7 +149,7 @@ def pad_audio_batch(batch):
         "audio_length": audio_length_tensor,
         "text_tokens": padded_text_tokens,
         "text_length": text_length_tensor,
-        "speakers": speaker_list,
+        # "speakers": speaker_list,
     }
 
 # # Example usage

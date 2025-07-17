@@ -1,24 +1,44 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM
 import os
+import sys
+import glob
 import torch
+import jiwer
 import pandas as pd
 from tqdm import tqdm
 from pathlib import Path
 import soundfile as sf
 from datetime import datetime
-from xcodec2.modeling_xcodec2 import XCodec2Model
+from whisper.normalizers import EnglishTextNormalizer
+sys.path.append('/mnt/fast/nobackup/users/yc01815/code/xcodec2')
+from vq_process import extract_vq_code, reconstruct_from_vq_code
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 
-llasa_1b ='HKUSTAudio/Llasa-1B'
 
+# Set CUDA-related environment variables
+os.environ["CUDA_HOME"] = os.path.expanduser("~/cuda-12.6")
+os.environ["PATH"] = f"{os.environ['CUDA_HOME']}/bin:" + os.environ.get("PATH", "")
+os.environ["LD_LIBRARY_PATH"] = f"{os.environ['CUDA_HOME']}/lib64:" + os.environ.get("LD_LIBRARY_PATH", "")
+
+# Set GCC compiler paths from conda
+conda_prefix = os.environ.get("CONDA_PREFIX", "/path/to/your/conda/env")  # fallback if not in conda env
+os.environ["CC"] = f"{conda_prefix}/bin/x86_64-conda-linux-gnu-gcc"
+os.environ["CXX"] = f"{conda_prefix}/bin/x86_64-conda-linux-gnu-g++"
+os.environ["LD_LIBRARY_PATH"] = (
+    f"{conda_prefix}/lib:"
+    f"{conda_prefix}/x86_64-conda-linux-gnu/lib:"
+    f"{conda_prefix}/lib/gcc/x86_64-conda-linux-gnu/12.4.0:"
+    + os.environ.get("LD_LIBRARY_PATH", "")
+)
+
+
+llasa_1b ='/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/online/finetune/0715_Etts/checkpoint-10000'
+
+# llasa_1b = "HKUSTAudio/Llasa-1B"
 tokenizer = AutoTokenizer.from_pretrained(llasa_1b)
 model = AutoModelForCausalLM.from_pretrained(llasa_1b)
 model.eval() 
 model.to('cuda')
 
-model_path = "HKUSTAudio/xcodec2"  
- 
-Codec_model = XCodec2Model.from_pretrained(model_path)
-Codec_model.eval().cuda()   
 
 def ids_to_speech_tokens(speech_ids):
  
@@ -42,18 +62,32 @@ def extract_speech_ids(speech_tokens_str):
 
 
 #TTS start!
-def gen_audio(data, save_path):
+def gen_audio(data, save_path, mode='tts'):
     for audio in tqdm(data):
         with torch.no_grad():
-            input_text = audio['transcription']
-            save_name = f"{Path(audio['src_path']).stem}_{audio['src_path'].split('/')[-2]}_to_{audio['trg_path'].split('/')[-2]}.wav"
+            input_text = audio['text']
+            save_name = f"{Path(audio['audio_path']).stem}.wav"
+            style_instruction = audio['caption']
+            
             formatted_text = f"<|TEXT_UNDERSTANDING_START|>{input_text}<|TEXT_UNDERSTANDING_END|>"
 
             # Tokenize the text
-            chat = [
-                {"role": "user", "content": "Convert the text to speech:" + formatted_text},
-                {"role": "assistant", "content": "<|SPEECH_GENERATION_START|>"}
-            ]
+            if mode == 'tts':
+                chat = [
+                    {"role": "user", "content": "Convert the text to speech:" + formatted_text},
+                    {"role": "assistant", "content": "<|SPEECH_GENERATION_START|>"}
+                ]
+            else:
+                input_text = (
+                    "Instruction: {instruction}\n\n"
+                    "Text: {text}"
+                ).format(instruction=style_instruction, text=formatted_text)
+
+                chat = [
+                    {"role": "system", "content": "You are a helpful speech assistant. Your job is to generate speech that matches the provided style instruction as closely as possible."},
+                    {"role": "user", "content": "Convert the text to speech: " + input_text},
+                    {"role": "assistant", "content": "<|SPEECH_GENERATION_START|>"}
+                ]
 
             input_ids = tokenizer.apply_chat_template(
                 chat, 
@@ -81,11 +115,9 @@ def gen_audio(data, save_path):
             speech_tokens = extract_speech_ids(speech_tokens)
             speech_tokens = torch.tensor(speech_tokens).cuda().unsqueeze(0).unsqueeze(0)
             # Decode the speech tokens to speech waveform
-            gen_wav = Codec_model.decode_code(speech_tokens) 
+            gen_wav = reconstruct_from_vq_code(speech_tokens) 
         
-        sf.write(f"{save_path}/{save_name}", gen_wav[0, 0, :].cpu().numpy(), 16000)
-
-
+        sf.write(f"{save_path}/{save_name}", gen_wav, 16000)
 
 
 def gen_audio_w_prompt(data, save_path):
@@ -180,14 +212,84 @@ def get_eval_data(data_path):
     return data_df.to_dict(orient='records')
 
 
+def asr(audio_gen_path, audio_file):
+    def load_model(model_id: str, device: str):
+        """加载语音识别模型"""
+        torch_dtype = torch.float16 if "cuda" in device else torch.float32
+        model = AutoModelForSpeechSeq2Seq.from_pretrained(
+            model_id, torch_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True
+        ).to(device)
+        processor = AutoProcessor.from_pretrained(model_id)
+        asr_pipeline = pipeline(
+            "automatic-speech-recognition",
+            model=model,
+            tokenizer=processor.tokenizer,
+            feature_extractor=processor.feature_extractor,
+            torch_dtype=torch_dtype,
+            device=device,
+        )
+        return asr_pipeline, processor
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    model_id = "openai/whisper-large-v3"
+    asr_pipeline, processor = load_model(model_id, device)
+    normalizer = EnglishTextNormalizer()
+    audio_list = glob.glob(f"{audio_gen_path}/**/*.wav", recursive=True)
+    audio_df = pd.read_csv(audio_file)
+    trans_gt, trans_from_audio, audio_name = [], [], []
+
+    for data in tqdm(audio_list):
+        # ex04-ex01_disgusted_004_channel1_segment_131.24_138.95_Expresso_ears_dataset2_to_environment
+        file_stem = Path(data).stem
+        match = audio_df[audio_df['audio_path'].str.contains(file_stem, na=False)]
+        if not match.empty:
+            transcription_gt = normalizer(match.iloc[0]['text'])
+        try:
+            transcription = asr_pipeline(data)['text'] # gt
+            transcription = normalizer(transcription)
+
+            trans_gt.append(transcription_gt)   
+            trans_from_audio.append(transcription)   
+            audio_name.append(file_stem)
+        except:
+            print(file_stem)
+            # assert False
+    
+    # __import__('ipdb').set_trace()
+
+    if trans_gt and trans_from_audio:
+        wer = jiwer.wer(trans_gt, trans_from_audio)
+        print(f"WER: {wer * 100:.2f} %")
+    else:
+        print("No valid audio-transcription pairs found.")
+
+    df = pd.DataFrame({
+    'audio_name': audio_name,
+    'trans_gt': trans_gt,
+    'trans_from_audio': trans_from_audio,
+    'wer': wer
+    })
+
+    # 保存为 CSV 文件
+    df.to_csv(f'{audio_gen_path}/transcription_results.csv', index=False)
+
 if __name__ == '__main__':
     # data_path = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/paired_emotion_with_instruct2.csv'
     # eval_path = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/ESD_bin_reprocess/val_combined.csv'
-    # reconstruct_eval_data(data_path, eval_path)
-    eval_data_path = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/ESD_bin_reprocess/val_combined_eval.csv'
-    eval_data = get_eval_data(eval_data_path)
+    # reconstruct_eval_data(data_path, eval_data_path)
+    eval_data_path = '/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/gen_speech_v1/valid_instruct_0_1000.csv'
+    eval_data = pd.read_csv(eval_data_path).to_dict(orient='records')
     today = datetime.now().strftime("%Y%m%d")
     
+    mode_list = ['etts', 'tts']
+    mode = mode_list[0]
+    save_path = f"/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/evaluation/{today}/{mode}/{llasa_1b.split('-')[1]}"
+    os.makedirs(save_path, exist_ok=True)
+
+    # gen_audio(eval_data[:500], save_path, mode)
+    asr('/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/evaluation/20250716/etts/10000', eval_data_path)
+
+
+    assert False
     n_tts = True
     if n_tts:
         save_path = f"/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/evaluation/esd_tts/{today}/temp_0.9"

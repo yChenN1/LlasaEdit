@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from dataclasses import dataclass, field
-from typing import Optional, List
+from typing import Optional, List, Callable
 from datasets import load_dataset
 from transformers import (
     AutoTokenizer,
@@ -18,6 +18,7 @@ from transformers import (
 )
 import transformers
 import wandb
+from itertools import islice
 from datasets import load_from_disk
 def freeze_model(model):
     for name, param in model.named_parameters():
@@ -31,7 +32,7 @@ from tts_online_dataset_genshin import WaveDataset, pad_audio_batch
 
 
 class llm_with_codec_model(PreTrainedModel):
-    def __init__(self, config, llm: nn.Module, encoder: nn.Module, tokenizer=None):
+    def __init__(self, config, llm: nn.Module, encoder: Callable, tokenizer=None):
         """
         Parameters:
           - config: Model configuration object (should contain or specify the llm's name/path)
@@ -54,7 +55,7 @@ class llm_with_codec_model(PreTrainedModel):
         If the returned shape is (B, 1, seq_len), squeeze out the 1st dimension.
         """
         with torch.no_grad():
-            speech_tokens = self.encoder.encode_batch_feats(
+            speech_tokens = self.encoder(
                 input_waveform=input_waveform,
                 input_features=input_features
             )
@@ -99,6 +100,7 @@ class llm_with_codec_model(PreTrainedModel):
         speech_gen_start_id = self.tokenizer.convert_tokens_to_ids('<|SPEECH_GENERATION_START|>')
         speech_gen_end_id   = self.tokenizer.convert_tokens_to_ids('<|SPEECH_GENERATION_END|>')
         audio_length_list = audio_length.tolist()
+
         for i in range(batch_size):
             valid_length = audio_length_list[i]
             # Extract the valid part of the speech tokens and convert to list
@@ -154,6 +156,7 @@ class ModelArguments:
 @dataclass
 class DataArguments:
     data_path: str = field(default=None, metadata={"help": "Root path to the data."})
+    use_instruction: bool = field(default=False, metadata={"help": "Whether to use instruction."})
 
 @dataclass
 class CustomTrainingArguments(TrainingArguments):
@@ -193,47 +196,45 @@ def main():
     device = torch.device(f'cuda:{device_id}' if torch.cuda.is_available() else 'cpu')
     
     # Import the speech codec model, for example XCodec2Model
-    from xcodec2.modeling_xcodec2 import XCodec2Model
-    model_path = "HKUSTAudio/xcodec2"
-    Codec_model = XCodec2Model.from_pretrained(model_path)
+    # from xcodec2.modeling_xcodec2 import XCodec2Model
+    # model_path = "HKUSTAudio/xcodec2"
+    # Codec_model = XCodec2Model.from_pretrained(model_path)
+    sys.path.append('/mnt/fast/nobackup/users/yc01815/code/llasa/xcodec2/')
+    from vq_process import extract_vq_code_for_offline_training as Codec_model
     
-    # Load dataset (example using Hugging Face datasets)
+    if not data_args.use_instruction:
+        data_split = load_dataset(
+            'parquet',
+            data_files={
+                'train': [
+                    '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/TTS_chunks/chunk_000.parquet',
+                    '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/TTS_chunks/chunk_001.parquet'
+                ]
+            },
+            split='train',
+        )
+    else:
+        data_split = load_dataset(
+            'parquet',
+            data_files={
+                'train': [
+                    '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/ETTS_chunks/*.parquet',
+                ]
+            },
+            split='train',
+        )
 
-    # We try on  shb777/gemini-flash-2.0-speech  and simon3000/genshin-voice
-
-    # dataset = load_dataset("shb777/gemini-flash-2.0-speech",
-    #                        cache_dir="/aifs4su/data/zheny/opensource/local_data160/data")
-    # data_split = load_dataset(
-    #     "shb777/gemini-flash-2.0-speech",
-    #     # split="en[:5000]",  # Only load the first 5000 records
-    #     split="en", 
-    #     cache_dir="/aifs4su/data/zheny/opensource/local_data160/data"
-    # )
-
-    # dataset = load_dataset('simon3000/genshin-voice', cache_dir='/aifs4su/data/zheny/opensource/local_data160/genshin')
-    # data_split = dataset['train']
-
-    saved_dataset_path = '/aifs4su/data/zheny/opensource/local_data160/genshin_filter'
-
-    # Load the filtered dataset from disk
-    dataset = load_from_disk(saved_dataset_path)
-
-    # Access the train split from the loaded dataset
-    data_split = dataset#['train']
-
-
-    # train_test_split = dataset['en'].train_test_split(test_size=0.005)
     train_test_split = data_split.train_test_split(test_size=0.005)
     train_dataset_raw = train_test_split["train"]
     test_dataset_raw = train_test_split["test"]
     
     # Instantiate custom dataset (pass in tokenizer for prompt construction and tokenization)
-    train_dataset = WaveDataset(train_dataset_raw, sampling_rate=16000, tokenizer=tokenizer)
-    test_dataset = WaveDataset(test_dataset_raw, sampling_rate=16000, tokenizer=tokenizer)
+    train_dataset = WaveDataset(train_dataset_raw, sampling_rate=16000, tokenizer=tokenizer, use_instruction=data_args.use_instruction)
+    test_dataset = WaveDataset(test_dataset_raw, sampling_rate=16000, tokenizer=tokenizer, use_instruction=data_args.use_instruction)
     
     lwc_model = llm_with_codec_model(config, model, Codec_model, tokenizer)
     lwc_model = lwc_model.to(device)
-    lwc_model.freeze_encoder()
+    # lwc_model.freeze_encoder()
     
     trainer = Trainer(
         model=lwc_model,
@@ -241,7 +242,7 @@ def main():
         args=training_args,
         train_dataset=train_dataset,
         eval_dataset=test_dataset,
-        data_collator=pad_audio_batch,
+        data_collator=pad_audio_batch
     )
     
     trainer.train()
