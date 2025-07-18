@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#SBATCH --job-name="llasa_Etts"
+#SBATCH --job-name="llasa_t1b"
 #SBATCH --partition=a100
 #SBATCH --gpus=2
 #SBATCH --nodes=1
@@ -32,5 +32,5 @@ export NVCC_FLAGS="--allow-unsupported-compiler"
 
 # Launch training
 # torchrun --nproc_per_node=1 --master-port 10203 finetune_offline_w_rl.py
-torchrun --nproc_per_node=2 --master-port 20223 finetune_online_ata.py
+torchrun --nproc_per_node=2 --master-port 20227 finetune_online_ata.py
 

@@ -35,10 +35,10 @@ class WaveDataset(torch.utils.data.Dataset):
         max_retry = 10  # 避免死循环
         for _ in range(max_retry):
             item = self.data[index]
-            transcription = item['text']
             # speaker = item['speaker']  # 'speaker' directly from the dataset
             src_audio_array = torch.tensor(item['src_audio']['array'])
             src_sr = item['src_audio']['sampling_rate']
+            style_instruction = item['trg_instruct']
 
             def process_audio(audio_array, sr, target_sr):
                 if audio_array.ndim == 1:
@@ -98,19 +98,19 @@ class WaveDataset(torch.utils.data.Dataset):
         # Prepare the text for tokenization
         # text_with_special = f"<|TEXT_UNDERSTANDING_START|>{transcription}<|TEXT_UNDERSTANDING_END|>"
         if not self.use_instruction:
-            style_instruction = item['trg_instruct']
             chat = [
                 {"role": "user", "content": "{style_instruction}".format(style_instruction=style_instruction)},
                 # {"role": "assistant", "content": f"Speaker {speaker}"}
             ]
         else:
-            style_instruction = item['caption']
+            transcription = item['text']
+            text_with_special = f"<|TEXT_GENERATION_START|>{transcription}<|TEXT_GENERATION_END|>"
+
             chat = [
-                {"role": "system", "content": "You are a helpful speech assistant. Your job is to generate speech that matches the provided style instruction as closely as possible."},
+                {"role": "system", "content": "You are an expert speech assistant. Your task is to generate an accurate transcription of the input speech, and follow the given instruction to convert speech that matches the provided style instruction as closely as possible."},
                 {
                 "role": "user",
                 "content": (
-                    "Convert the following text to speech based on the given style instruction.\n\n"
                     "Instruction: {instruction}\n\n"
                     "Text: {text}"
                 ).format(instruction=style_instruction, text=text_with_special)

@@ -38,7 +38,7 @@ torch.backends.cudnn.benchmark = False
 
 
 class llm_with_codec_model(PreTrainedModel):
-    def __init__(self, config, llm: nn.Module, encoder: Callable, tokenizer=None):
+    def __init__(self, config, llm: nn.Module, encoder: Callable, tokenizer=None, use_instruction=False):
         """
         Parameters:
           - config: Model configuration object (should contain or specify the llm's name/path)
@@ -53,7 +53,8 @@ class llm_with_codec_model(PreTrainedModel):
         self.tokenizer = tokenizer
         self.ignore_index = -100
         self.base_num = 128256 + 8  # length of llama tokenizer + 8 new special tokens
-    
+        self.use_instruction = use_instruction
+
     def get_speech_token(self, input_waveform, input_features):
         """
         Extract speech token sequence using the encoder.
@@ -116,6 +117,8 @@ class llm_with_codec_model(PreTrainedModel):
         speech_gen_end_id   = self.tokenizer.convert_tokens_to_ids('<|SPEECH_GENERATION_END|>')
         speech_understanding_start_id = self.tokenizer.convert_tokens_to_ids('<|SPEECH_UNDERSTANDING_START|>')
         speech_understanding_end_id   = self.tokenizer.convert_tokens_to_ids('<|SPEECH_UNDERSTANDING_END|>')
+        text_gen_start_id = self.tokenizer.convert_tokens_to_ids('<|TEXT_GENERATION_START|>')
+        text_gen_end_id   = self.tokenizer.convert_tokens_to_ids('<|TEXT_GENERATION_END|>')
         
         src_audio_length_list = src_audio_length_tensor.tolist()
         trg_audio_length_list = trg_audio_length_tensor.tolist()
@@ -137,12 +140,15 @@ class llm_with_codec_model(PreTrainedModel):
             src_tokens = [speech_understanding_start_id] + src_tokens + [speech_understanding_end_id]
             src_processed_speech_tokens.append(src_tokens)
 
-
         # Concatenate the text tokens and the processed speech tokens for each sample, ensuring a fixed length of 2048
         combined_tokens = []
         max_total_length = 2048
         for text_tok, src_speech_tok, trg_speech_tok in zip(all_text_tokens, src_processed_speech_tokens, trg_processed_speech_tokens):
-            combined = text_tok + src_speech_tok + trg_speech_tok
+            if not self.use_instruction:
+                combined = text_tok + src_speech_tok + trg_speech_tok
+            else:
+                text_gen_pos = text_tok.index(text_gen_start_id)
+                combined = text_tok[:text_gen_pos] + src_speech_tok + text_tok[text_gen_pos:] + trg_speech_tok
             if len(combined) > max_total_length:
                 combined = combined[:max_total_length]
             else:
@@ -154,7 +160,10 @@ class llm_with_codec_model(PreTrainedModel):
         # Construct labels: set the text portion (the first t_len tokens) to ignore_index, keeping the speech tokens unchanged
         labels = input_ids.clone()
         for i in range(batch_size):
-            first_gen_pos = (input_ids[i] == speech_gen_start_id).nonzero(as_tuple=True)[0].item()
+            if not self.use_instruction:
+                first_gen_pos = (input_ids[i] == speech_gen_start_id).nonzero(as_tuple=True)[0].item()
+            else:
+                first_gen_pos = (input_ids[i] == text_gen_start_id).nonzero(as_tuple=True)[0].item()
             labels[i, :first_gen_pos] = self.ignore_index
         labels[input_ids == self.tokenizer.pad_token_id] = self.ignore_index
         
@@ -230,13 +239,14 @@ def main():
     # Codec_model = XCodec2Model.from_pretrained(model_path)
     sys.path.append('/mnt/fast/nobackup/users/yc01815/code/llasa/xcodec2/')
     from vq_process import extract_vq_code_for_offline_training as Codec_model
-    
-    if not data_args.use_instruction:
+
+    test = False
+    if test:
         data_split = load_dataset(
             'parquet',
             data_files={
                 'train': [
-                    '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/VST_chunks/*.parquet',
+                    '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/VST_chunks/chunk_000.parquet',
                 ]
             },
             split='train',
@@ -246,7 +256,7 @@ def main():
             'parquet',
             data_files={
                 'train': [
-                    '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/ETTS_chunks/*.parquet',
+                    '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/VST_chunks/*.parquet',
                 ]
             },
             split='train',
@@ -260,7 +270,7 @@ def main():
     train_dataset = WaveDataset(train_dataset_raw, sampling_rate=16000, tokenizer=tokenizer, use_instruction=data_args.use_instruction)
     # test_dataset = WaveDataset(test_dataset_raw, sampling_rate=16000, tokenizer=tokenizer, use_instruction=data_args.use_instruction)
     
-    lwc_model = llm_with_codec_model(config, model, Codec_model, tokenizer)
+    lwc_model = llm_with_codec_model(config, model, Codec_model, tokenizer, use_instruction=data_args.use_instruction)
     lwc_model = lwc_model.to(device)
     # lwc_model.freeze_encoder()
     
