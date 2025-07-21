@@ -11,7 +11,7 @@ from torch.utils.data import Dataset
 
 # Adapt the dataset to the new format
 class WaveDataset(torch.utils.data.Dataset):
-    def __init__(self, data, sampling_rate, tokenizer, audio_norm_scale: float = 1.0, root_dir: str = "", max_audio_duration: float = 41.0, use_instruction=False):
+    def __init__(self, data, sampling_rate, tokenizer, audio_norm_scale: float = 1.0, root_dir: str = "", max_audio_duration: float = 41.0, use_instruction=False, task='ata'):
         """
         data: A list of data entries, each containing 'audio', 'transcription', 'speaker', etc.
         tokenizer: A tokenizer used to convert text into tokens.
@@ -26,6 +26,7 @@ class WaveDataset(torch.utils.data.Dataset):
         self.tokenizer = tokenizer
         self.max_audio_frames = int(max_audio_duration * self.sampling_rate)  # Maximum number of frames for the given max duration
         self.use_instruction = use_instruction
+        self.task = task
     
     def __len__(self):
         # Each record corresponds to one sample
@@ -97,25 +98,33 @@ class WaveDataset(torch.utils.data.Dataset):
         
         # Prepare the text for tokenization
         # text_with_special = f"<|TEXT_UNDERSTANDING_START|>{transcription}<|TEXT_UNDERSTANDING_END|>"
-        if not self.use_instruction:
-            chat = [
-                {"role": "user", "content": "{style_instruction}".format(style_instruction=style_instruction)},
-                # {"role": "assistant", "content": f"Speaker {speaker}"}
-            ]
-        else:
+        if self.task == 'asr':
             transcription = item['text']
             text_with_special = f"<|TEXT_GENERATION_START|>{transcription}<|TEXT_GENERATION_END|>"
-
             chat = [
-                {"role": "system", "content": "You are an expert speech assistant. Your task is to generate an accurate transcription of the input speech, and follow the given instruction to convert speech that matches the provided style instruction as closely as possible."},
-                {
-                "role": "user",
-                "content": (
-                    "Instruction: {instruction}\n\n"
-                    "Text: {text}"
-                ).format(instruction=style_instruction, text=text_with_special)
-                }
+                {"role": "user", "content": 'Convert speech to text.' + text_with_special}
             ]
+
+        else:   
+            if not self.use_instruction:
+                chat = [
+                    {"role": "user", "content": "{style_instruction}".format(style_instruction=style_instruction)},
+                    # {"role": "assistant", "content": f"Speaker {speaker}"}
+                ]
+            else:
+                transcription = item['text']
+                text_with_special = f"<|TEXT_GENERATION_START|>{transcription}<|TEXT_GENERATION_END|>"
+
+                chat = [
+                    {"role": "system", "content": "You are an expert speech assistant. Your task is to generate an accurate transcription of the input speech, and follow the given instruction to convert speech that matches the provided style instruction as closely as possible."},
+                    {
+                    "role": "user",
+                    "content": (
+                        "Instruction: {instruction}\n\n"
+                        "Text: {text}"
+                    ).format(instruction=style_instruction, text=text_with_special)
+                    }
+                ]
         text_tokens = self.tokenizer.apply_chat_template(chat, tokenize=True, continue_final_message=True)
         text_tokens = torch.tensor(text_tokens, dtype=torch.long)
         text_length = text_tokens.size(0)
@@ -200,115 +209,3 @@ def pad_audio_batch(batch):
         "padded_text_tokens": padded_text_tokens,
         "text_length_tensor": text_length_tensor,
     }
-    
-
-    
- 
-    return {
-        "padded_audios": padded_audios,
-        "padded_feat_list": padded_feat_list,
-        "audio_length": audio_length_tensor,
-        "text_tokens": padded_text_tokens,
-        "text_length": text_length_tensor,
-        # "speakers": speaker_list,
-    }
-
-# # Example usage
-# if __name__ == '__main__':
-#     from datasets import load_dataset
-#     from torch.utils.data import DataLoader
-#     from collections import defaultdict
-#     from tqdm import tqdm 
-#     # Load the new dataset
-#     dataset = load_dataset('simon3000/genshin-voice', cache_dir='/aifs4su/data/zheny/opensource/local_data160/genshin')
-#     data_split = dataset['train']
-    
-#     # Initialize the tokenizer 
-#     # tokenizer = AutoTokenizer.from_pretrained("HKUSTAudio/Llasa-1B")
-    
-#     # # Instantiate the dataset
-#     # genshin_dataset = WaveDataset(data_split, sampling_rate=16000, tokenizer=tokenizer)
-    
-#     # # Create DataLoader
-#     # loader = DataLoader(genshin_dataset, batch_size=2, collate_fn=pad_audio_batch)
-    
-#     # # Retrieve one batch
-#     # batch = next(iter(loader))
-#     # print("padded_audios shape:", batch["padded_audios"].shape)
-#     # print("padded_feat_list shape:", batch["padded_feat_list"].shape)
-#     # print("audio_length:", batch["audio_length"])
-#     # print("text_tokens shape:", batch["text_tokens"].shape)
-#     # print("text_length:", batch["text_length"])
-#     # print("speakers:", batch["speakers"])
-#     speaker_duration = defaultdict(float)
-#     speaker_types = defaultdict(set)
-#     speaker_languages = defaultdict(set)
- 
-#     for item in tqdm(data_split, desc="Processing items"):
-#         speaker = item['speaker']
-#         duration = item['audio']['array'].shape[0]/48000
-#         speaker_type = item['type']
-#         language = item['language']
-        
-#         speaker_duration[speaker] += duration
-#         speaker_types[speaker].add(speaker_type)
-#         speaker_languages[speaker].add(language)
- 
-if __name__ == '__main__':
-    from datasets import load_dataset
-    from collections import defaultdict
-    from tqdm import tqdm 
-    
-    # Load the new dataset
-    dataset = load_dataset('simon3000/genshin-voice', cache_dir='/aifs4su/data/zheny/opensource/local_data160/genshin')
-    data_split = dataset['train']
-    
- 
-    # Define your selected speakers (based on your previous list)
-    selected_speakers = {
-        'Paimon', 'Traveler', 'Nahida', 'Navia', 'Furina', 'Lyney', 'Layla', 'Neuvillette',
-        'Kaveh', 'Tighnari', 'Alhaitham', 'Kaeya', 'Dehya', 'Zhongli', 'Cyno', 'Yoimiya',
-        'Mualani', 'Ningguang', 'Nilou', 'Faruzan', 'Wriothesley', 'Collei', 'Thoma', 'Noelle',
-        'Venti', 'Lynette', 'Charlotte', 'Diona', 'Yelan', 'Clorinde', 'Sigewinne', 'Beidou',
-        'Gorou', 'Lisa', 'Yanfei', 'Xianyun', 'Chevreuse', 'Sucrose', 'Sayu', 'Ganyu', 'Chiori',
-        'Chongyun', 'Freminet', 'Kachina', 'Barbara', 'Baizhu', 'Kirara', 'Emilie', 'Dainsleif',
-        'Klee', 'Albedo', 'Dori', 'Eula', 'Xiao', 'Mona', 'Bennett', 'Amber', 'Xingqiu', 'Shenhe',
-        'Childe', 'Kinich', 'Xiangling', 'Gaming', 'Jean', 'Diluc', 'Mavuika', 'Katheryne', 'Aeval',
-        'Mika', 'Dunyarzad', 'Keqing', 'Candace'
-    }
-
- 
-
-    # Filter the dataset based on selected speakers
-    filtered_data_split = data_split.filter(lambda voice: voice['speaker'] in selected_speakers)
-
-from datasets import load_dataset
-
-if __name__ == '__main__':
-    from tqdm import tqdm 
-    
-    # Load the new dataset
-    dataset = load_dataset('simon3000/genshin-voice', cache_dir='/aifs4su/data/zheny/opensource/local_data160/genshin')
-    data_split = dataset['train']
-    
-    # Define your selected speakers (based on your previous list)
-    selected_speakers = { 
-        'Paimon', 'Traveler', 'Nahida', 'Navia', 'Furina', 'Lyney', 'Layla', 'Neuvillette',
-        'Kaveh', 'Tighnari', 'Alhaitham', 'Kaeya', 'Dehya', 'Zhongli', 'Cyno', 'Yoimiya',
-        'Ningguang', 'Nilou', 'Faruzan', 'Wriothesley', 'Collei', 'Thoma', 'Noelle',
-        'Venti', 'Lynette', 'Charlotte', 'Diona', 'Yelan', 'Clorinde', 'Sigewinne', 'Beidou',
-        'Gorou', 'Lisa', 'Yanfei', 'Sucrose', 'Sayu', 'Ganyu', 'Chiori', 'Chongyun', 'Freminet',
-        'Barbara', 'Baizhu', 'Kirara', 'Dainsleif', 'Klee', 'Albedo', 'Dori', 'Eula', 'Xiao',
-        'Mona', 'Bennett', 'Amber', 'Xingqiu', 'Shenhe', 'Childe', 'Xiangling', 'Jean', 'Diluc',
-        'Katheryne', 'Mika', 'Keqing', 'Candace'
-    }
-
-
-    # Filter the dataset based on selected speakers
-    filtered_data_split = data_split.filter(lambda voice: voice['speaker'] in selected_speakers)
-
-    # Save the filtered dataset to disk
-    save_path = '/aifs4su/data/zheny/opensource/local_data160/genshin_filter'  # Specify your local path here
-    filtered_data_split.save_to_disk(save_path)
-
-    print(f"Dataset saved to {save_path}")

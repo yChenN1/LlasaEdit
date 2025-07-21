@@ -1,36 +1,92 @@
-#!/bin/sh
+#!/bin/bash
 
-#SBATCH --job-name="llasa_t1b"
+#SBATCH --job-name="gen_asr"
 #SBATCH --partition=a100
-#SBATCH --gpus=2
+#SBATCH --gpus=1
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=2
-#SBATCH --mem=200G
+#SBATCH --mem=50G
 #SBATCH --time=03-00:00:00 
-#SBATCH -o slurm_run/slurm.%N.%j.out 
-#SBATCH -e slurm_run/slurm.%N.%j.err
+#SBATCH --output=/dev/null
+#SBATCH --error=/dev/null
 
 # Load modules if needed (optional)
 # module load cuda/12.6
 # module load gcc/11.4
 
 # Activate your conda environment
-source ~/.bashrc
-conda activate llasa
+# source ~/.bashrc
+# conda activate llasa
+
+MODEL_PATH=$1
+NAME_SUFFIX=$2
+LEARNING_RATE=$3
+
+# 获取 SLURM job 信息
+NODE_NAME=$(hostname)
+JOB_ID=${SLURM_JOB_ID:-manual}  # fallback in case not under sbatch
+
+LOG_STDOUT="slurm_run/${NAME_SUFFIX}_${NODE_NAME}.${JOB_ID}.out"
+LOG_STDERR="slurm_run/${NAME_SUFFIX}_${NODE_NAME}.${JOB_ID}.err"
+
+echo "[INFO] Logging STDOUT to $LOG_STDOUT"
+echo "[INFO] Logging STDERR to $LOG_STDERR"
+
+# 重定向标准输出和错误
+exec > >(tee "$LOG_STDOUT") 2> >(tee "$LOG_STDERR" >&2)
+
 
 # CUDA & GCC paths
 export CUDA_HOME=$HOME/cuda-12.6
 export PATH=$CUDA_HOME/bin:$PATH
 export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+export HF_DATASETS_CACHE=/mnt/fast/nobackup/scratch4weeks/jz01101/.hf_datasets_cache
 
-export CC=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-gcc
-export CXX=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-g++
-export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$CONDA_PREFIX/x86_64-conda-linux-gnu/lib:$CONDA_PREFIX/lib/gcc/x86_64-conda-linux-gnu/12.4.0:$LD_LIBRARY_PATH
 
-# Optional: allow unsupported compiler for nvcc
-export NVCC_FLAGS="--allow-unsupported-compiler"
+if [ -z "$MODEL_PATH" ] || [ -z "$NAME_SUFFIX" ] || [ -z "$LEARNING_RATE" ]; then
+  echo "Usage: sbatch vst.sub <llm_model_path> <NAME_SUFFIX> <LEARNING_RATE>"
+  exit 1
+fi
+# 获取当前日期（MMDD）
+TODAY=$(date +%m%d)
+
+# 生成 output_dir
+PREFIX="/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/finetune"
+OUTPUT_DIR="${PREFIX}/${TODAY}_a2a_${NAME_SUFFIX}"
+
+
+# 临时修改后的 config 文件路径
+CONFIG_TEMPLATE=config_ata.json
+CONFIG_PATH="${NAME_SUFFIX}_config_asr.json"
+
+
+# 打印参数到 SLURM out
+echo "========== Training Job Configuration =========="
+echo "MODEL_PATH      = $MODEL_PATH"
+echo "NAME_SUFFIX     = $NAME_SUFFIX"
+echo "LEARNING_RATE   = $LEARNING_RATE"
+echo "OUTPUT_DIR      = $OUTPUT_DIR"
+echo "CONFIG_PATH     = $CONFIG_PATH"
+echo "==============================================="
+
+echo "========== Full Config (${CONFIG_PATH}) =========="
+cat "$CONFIG_PATH"
+echo "==================================================="
+
+
+# 使用 jq 替换多个字段
+jq \
+  --arg model_path "$MODEL_PATH" \
+  --arg output_dir "$OUTPUT_DIR" \
+  --arg lr "$LEARNING_RATE" \
+  '.llm_model_name_or_path = $model_path |
+   .output_dir = $output_dir |
+   .learning_rate = ($lr | tonumber)' \
+  "$CONFIG_TEMPLATE" > "$CONFIG_PATH"
 
 # Launch training
 # torchrun --nproc_per_node=1 --master-port 10203 finetune_offline_w_rl.py
-torchrun --nproc_per_node=2 --master-port 20227 finetune_online_ata.py
+torchrun --nproc_per_node=1 --master-port 20230 finetune_online_ata.py --config "$CONFIG_PATH"
+
+
 
