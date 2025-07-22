@@ -29,7 +29,7 @@ from tts_online_dataset_genshin_ata import WaveDataset, pad_audio_batch
 sys.path.append('/mnt/fast/nobackup/users/jz01101/cy/LlasaEdit/xcodec2')
 from vq_process import extract_vq_code_for_offline_training as Codec_model
 from vq_process import reconstruct_from_vq_code
-
+from peft import LoraConfig, get_peft_model
 
 seed = 42
 random.seed(seed)
@@ -218,6 +218,7 @@ class CustomTrainingArguments(TrainingArguments):
     run_name: Optional[str] = field(default=None, metadata={"help": "The name of the run for logging."})
     gradient_checkpointing: bool = field(default=True)
     lr_scheduler_type: str = field(default="cosine", metadata={"help": "Learning rate scheduler type"})
+    use_lora: bool = field(default=False)
 
 def main():
     default_config_file = 'config_ata.json'
@@ -245,6 +246,7 @@ def main():
         padding_side="right"
     )
     tokenizer.pad_token = tokenizer.eos_token
+
     model = AutoModelForCausalLM.from_pretrained(
         model_args.llm_model_name_or_path,
         torch_dtype='auto',
@@ -253,11 +255,21 @@ def main():
     config = transformers.AutoConfig.from_pretrained(model_args.llm_model_name_or_path)
     device_id = int(os.getenv('LOCAL_RANK', 0))
     device = torch.device(f'cuda:{device_id}' if torch.cuda.is_available() else 'cpu')
+
+    if training_args.use_lora:
+        lora_config = LoraConfig(
+        r=8,                      
+        lora_alpha=32,           
+        target_modules=["q_proj", "v_proj"],   
+        lora_dropout=0.1,
+        bias="none",
+        task_type="CAUSAL_LM"
+        )
+        model = get_peft_model(model, lora_config)
     
-    # Import the speech codec model, for example XCodec2Model
-    # from xcodec2.modeling_xcodec2 import XCodec2Model
-    # model_path = "HKUSTAudio/xcodec2"
-    # Codec_model = XCodec2Model.from_pretrained(model_path)
+        model.print_trainable_parameters()
+        trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        print("Number of trainable parameters:", trainable_params)
 
     data_split = load_dataset(
             'parquet',

@@ -8,8 +8,8 @@
   "per_device_eval_batch_size": 4,
   "gradient_accumulation_steps": 4,
   "eval_strategy": "steps",
-  "eval_steps": 100,
-  "eval_on_start": false,
+  "eval_steps": 50,
+  "eval_on_start": true,
   "remove_unused_columns": false,
   "save_strategy": "steps",
   "save_steps": 1000,
@@ -27,5 +27,6 @@
   "dataloader_prefetch_factor": 4 ,
   "deepspeed":"/mnt/fast/nobackup/users/jz01101/cy/LlasaEdit/LLaSA_training/ds_config_zero2.json",
   "use_instruction": true,
-  "task": "asr"
+  "task": "asr",
+  "use_lora": true
 }

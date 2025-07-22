@@ -2,14 +2,14 @@
   "llm_model_name_or_path": "/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/online/finetune/0715_Etts/checkpoint-15000",
   "data_path": "/aifs4su/data/zheny/opensource/LJSpeech-1.1/ljspeech_bin",
   "bf16": true,
-  "output_dir": "/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/finetune/0721_a2a_asr_etts15k_1e-6",
+  "output_dir": "/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/finetune/test",
   "num_train_epochs": 2,
-  "per_device_train_batch_size": 4,
-  "per_device_eval_batch_size": 4,
+  "per_device_train_batch_size": 1,
+  "per_device_eval_batch_size": 1,
   "gradient_accumulation_steps": 4,
   "eval_strategy": "steps",
   "eval_steps": 100,
-  "eval_on_start": false,
+  "eval_on_start": true,
   "remove_unused_columns": false,
   "save_strategy": "steps",
   "save_steps": 1000,
@@ -27,5 +27,6 @@
   "dataloader_prefetch_factor": 4,
   "deepspeed": "/mnt/fast/nobackup/users/jz01101/cy/LlasaEdit/LLaSA_training/ds_config_zero2.json",
   "use_instruction": true,
-  "task": "asr"
+  "task": "asr",
+  "use_lora": true
 }
