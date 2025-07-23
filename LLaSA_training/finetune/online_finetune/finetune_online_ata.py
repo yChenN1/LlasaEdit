@@ -207,8 +207,8 @@ def main():
     
     is_main_process = training_args.local_rank in [-1, 0]
     if training_args.report_to == "wandb" and is_main_process:
-        wandb.init(project="llm_tts", config=training_args.to_sanitized_dict(), name=training_args.run_name)
-    
+        wandb.init(project="llasa", config=training_args.to_sanitized_dict(), name=training_args.run_name)
+    print(model_args.llm_model_name_or_path)
     tokenizer = AutoTokenizer.from_pretrained(
         model_args.llm_model_name_or_path,
         model_max_length=training_args.model_max_length,
@@ -223,34 +223,35 @@ def main():
     config = transformers.AutoConfig.from_pretrained(model_args.llm_model_name_or_path)
     device_id = int(os.getenv('LOCAL_RANK', 0))
     device = torch.device(f'cuda:{device_id}' if torch.cuda.is_available() else 'cpu')
-    
     # Import the speech codec model, for example XCodec2Model
     # from xcodec2.modeling_xcodec2 import XCodec2Model
     # model_path = "HKUSTAudio/xcodec2"
     # Codec_model = XCodec2Model.from_pretrained(model_path)
-    sys.path.append('/mnt/fast/nobackup/users/yc01815/code/llasa/xcodec2/')
+    sys.path.append('/mnt/bn/tanman-yg/chenqi/code/LlasaEdit/xcodec2')
     from vq_process import extract_vq_code_for_offline_training as Codec_model
     
     if not data_args.use_instruction:
-        data_split = load_dataset(
-            'parquet',
-            data_files={
-                'train': [
-                    '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/VST_chunks/*.parquet',
-                ]
-            },
-            split='train',
-        )
+        data_split = load_dataset('/mnt/bn/tanman-yg/chenqi/datas/InstructSpeech_Dataset')['train']
+        # data_split = load_dataset(
+        #     'parquet',
+        #     data_files={
+        #         'train': [
+        #             '/home/tiger/.cache/huggingface/hub/datasets--Ainncy--InstructSpeech_Dataset/snapshots/535b00fc9ddd4ef180381da0fc45541b6ddf3605/chunk_000.parquet',
+        #         ]
+        #     },
+        #     split='train',
+        # )
     else:
-        data_split = load_dataset(
-            'parquet',
-            data_files={
-                'train': [
-                    '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/ETTS_chunks/*.parquet',
-                ]
-            },
-            split='train',
-        )
+        data_split = load_dataset('/mnt/bn/tanman-yg/chenqi/datas/InstructSpeech_Dataset')['train']
+        # data_split = load_dataset(
+        #     'parquet',
+        #     data_files={
+        #         'train': [
+        #             '/home/tiger/.cache/huggingface/hub/datasets--Ainncy--InstructSpeech_Dataset/snapshots/535b00fc9ddd4ef180381da0fc45541b6ddf3605/chunk_000.parquet',
+        #         ]
+        #     },
+        #     split='train',
+        # )
 
     # train_test_split = data_split.train_test_split(test_size=0.005)
     # train_dataset_raw = train_test_split["train"]

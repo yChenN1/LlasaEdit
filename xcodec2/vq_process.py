@@ -53,7 +53,7 @@ def load_models(ckpt_path):
     return encoder, decoder, semantic_encoder, fc_post_a, fc_prior, semantic_model, feature_extractor
 
 
-models = load_models('/mnt/fast/nobackup/scratch4weeks/yc01815/pretrain_models/xcodec2/xcodec2.ckpt')
+models = load_models('/mnt/bn/tanman-yg/chenqi/code/LlasaEdit/xcodec2/pretrained_models/xcodec2.ckpt')
 encoder, decoder, semantic_encoder, fc_post_a, fc_prior, semantic_model, feature_extractor = models
 
 def extract_vq_code(wav, encoder=encoder, decoder=decoder, semantic_model=semantic_model, semantic_encoder=semantic_encoder, fc_prior=fc_prior, feature_extractor=feature_extractor, sr=16000):

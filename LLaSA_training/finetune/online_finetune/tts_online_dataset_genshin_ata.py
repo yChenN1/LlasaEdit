@@ -22,7 +22,7 @@ class WaveDataset(torch.utils.data.Dataset):
         self.audio_norm_scale = audio_norm_scale
         self.hop_length = 320
         self.root_dir = root_dir
-        self.feature_extractor = AutoFeatureExtractor.from_pretrained("facebook/w2v-bert-2.0")
+        self.feature_extractor = AutoFeatureExtractor.from_pretrained("/mnt/bn/tanman-yg/chenqi/code/LlasaEdit/w2v-bert-2.0")
         self.tokenizer = tokenizer
         self.max_audio_frames = int(max_audio_duration * self.sampling_rate)  # Maximum number of frames for the given max duration
         self.use_instruction = use_instruction

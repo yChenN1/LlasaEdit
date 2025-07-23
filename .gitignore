@@ -20,3 +20,11 @@ slurm_run/
 # 保留所有 .py 文件（这条只有你开启了 /* 过滤才需要）
 # !*/            # 让 .py 文件夹结构可见
 
+.git
+LlasaEditModel/
+Llasa-1B/
+w2v-bert-2.0/
+LLaSA_training/online/
+xcodec2/
+*.json
+*.log
