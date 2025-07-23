@@ -41,7 +41,7 @@ torch.backends.cudnn.benchmark = False
 
 
 class llm_with_codec_model(PreTrainedModel):
-    def __init__(self, config, llm: nn.Module, encoder: Callable, tokenizer=None, use_instruction=False, task='ata'):
+    def __init__(self, config, llm: nn.Module, encoder: Callable, tokenizer=None, use_text=False, task='ata', text_guide=False):
         """
         Parameters:
           - config: Model configuration object (should contain or specify the llm's name/path)
@@ -64,8 +64,10 @@ class llm_with_codec_model(PreTrainedModel):
         self.text_gen_start_id = self.tokenizer.convert_tokens_to_ids('<|TEXT_GENERATION_START|>')
         self.text_gen_end_id   = self.tokenizer.convert_tokens_to_ids('<|TEXT_GENERATION_END|>')
         
-        self.use_instruction = use_instruction
+        self.use_text = use_text
         self.task = task
+        self.text_guide = text_guide
+
 
     def get_speech_token(self, input_waveform, input_features):
         """
@@ -156,7 +158,7 @@ class llm_with_codec_model(PreTrainedModel):
         combined_tokens = []
         max_total_length = 2048
         for text_tok, src_speech_tok, trg_speech_tok in zip(all_text_tokens, src_processed_speech_tokens, trg_processed_speech_tokens):
-            if self.task == 'asr' or self.use_instruction:
+            if self.task == 'asr' or (self.use_text and not self.text_guide):
                 text_gen_pos = text_tok.index(self.text_gen_start_id)
                 combined = text_tok[:text_gen_pos] + src_speech_tok + text_tok[text_gen_pos:] + trg_speech_tok
             else:
@@ -172,13 +174,13 @@ class llm_with_codec_model(PreTrainedModel):
         # Construct labels: set the text portion (the first t_len tokens) to ignore_index, keeping the speech tokens unchanged
         labels = input_ids.clone()
         for i in range(batch_size):
-            if self.use_instruction:
+            if (self.use_text and not self.text_guide) or self.task =='asr':
                 first_gen_pos = (input_ids[i] == self.text_gen_start_id).nonzero(as_tuple=True)[0].item()
             else:
                 first_gen_pos = (input_ids[i] == self.speech_gen_start_id).nonzero(as_tuple=True)[0].item()
             labels[i, :first_gen_pos] = self.ignore_index
         labels[input_ids == self.tokenizer.pad_token_id] = self.ignore_index
-        # __import__('ipdb').set_trace()
+
         attention_mask = (input_ids != self.tokenizer.pad_token_id).long()
         outputs = self.llm(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
         return outputs
@@ -206,8 +208,9 @@ class ModelArguments:
 @dataclass
 class DataArguments:
     data_path: str = field(default=None, metadata={"help": "Root path to the data."})
-    use_instruction: bool = field(default=False, metadata={"help": "Whether to use instruction."})
+    use_text: bool = field(default=False, metadata={"help": "Whether to use instruction."})
     task: str = field(default=None, metadata={"help": "Task type."})
+    text_guide: bool = field(default=False, metadata={"help": "Whether to use text guide."})
 
 @dataclass
 class CustomTrainingArguments(TrainingArguments):
@@ -296,11 +299,11 @@ def main():
     train_dataset_raw = data_split
     from torch.utils.data import Subset
     # Instantiate custom dataset (pass in tokenizer for prompt construction and tokenization)
-    train_dataset = WaveDataset(train_dataset_raw, sampling_rate=16000, tokenizer=tokenizer, use_instruction=data_args.use_instruction, task=data_args.task)
-    test_dataset = WaveDataset(test_data_split, sampling_rate=16000, tokenizer=tokenizer, use_instruction=data_args.use_instruction, task=data_args.task)
+    train_dataset = WaveDataset(train_dataset_raw, sampling_rate=16000, tokenizer=tokenizer, use_text=data_args.use_text, task=data_args.task, text_guide=data_args.text_guide)
+    test_dataset = WaveDataset(test_data_split, sampling_rate=16000, tokenizer=tokenizer, use_text=data_args.use_text, task=data_args.task, text_guide=data_args.text_guide)
     test_dataset = Subset(test_dataset, list(range(500)))
 
-    lwc_model = llm_with_codec_model(config, model, Codec_model, tokenizer, use_instruction=data_args.use_instruction, task=data_args.task)
+    lwc_model = llm_with_codec_model(config, model, Codec_model, tokenizer, use_text=data_args.use_text, task=data_args.task, text_guide=data_args.text_guide)
     lwc_model = lwc_model.to(device)
     # lwc_model.freeze_encoder()
     trainer = Trainer(
