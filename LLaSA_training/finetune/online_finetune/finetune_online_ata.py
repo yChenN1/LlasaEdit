@@ -26,7 +26,7 @@ def freeze_model(model):
         param.requires_grad = False
 
 from tts_online_dataset_genshin_ata import WaveDataset, pad_audio_batch
-sys.path.append('/mnt/fast/nobackup/users/jz01101/cy/LlasaEdit/xcodec2')
+sys.path.append('/mnt/bn/tanman-yg/chenqi/code/LlasaEdit/xcodec2')
 from vq_process import extract_vq_code_for_offline_training as Codec_model
 from vq_process import reconstruct_from_vq_code
 from peft import LoraConfig, get_peft_model
