@@ -16,6 +16,7 @@ from vq_process import load_models, extract_vq_code, reconstruct_from_vq_code
 import warnings
 warnings.filterwarnings("ignore")
 
+
 # Set CUDA-related environment variables
 os.environ["CUDA_HOME"] = os.path.expanduser("~/cuda-12.6")
 os.environ["PATH"] = f"{os.environ['CUDA_HOME']}/bin:" + os.environ.get("PATH", "")
@@ -34,7 +35,7 @@ os.environ["LD_LIBRARY_PATH"] = (
 
 
 # === Load Models ===
-llasa_1b = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/finetune/EVC_0712/checkpoint-86000'
+llasa_1b = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/qic/test/checkpoint-2000_test'
 # llasa_1b ='HKUSTAudio/Llasa-1B'
 tokenizer = AutoTokenizer.from_pretrained(llasa_1b)
 llm_model = AutoModelForCausalLM.from_pretrained(llasa_1b).eval().cuda()
@@ -102,30 +103,9 @@ else:
     eos_token_id = text_generation_end_id
 
 
-# === test xcodec2 ability ===
-
-# audio_path = "/mnt/fast/nobackup/scratch4weeks/yc01815/Emotion_Speech_Dataset/English/0012/Angry/0012_000351.wav"
-# wav, sr = librosa.load(audio_path, sr=16000)
-# assert sr == 16000, "Only supports 16kHz audio"
-
-# # === Encode Audio to Speech Tokens ===
-# wav_tensor = torch.from_numpy(wav).float().unsqueeze(0).cuda()  # Shape: (1, T)
-# with torch.no_grad():
-#     vq_code = extract_vq_code(wav)  # (1, 1, T_code)
-# speech_ids = vq_code[0, 0].cpu().numpy()
-# # speech_token_str = ids_to_tokens(speech_ids)
-
-# # === Save Reconstructed Original Audio ===
-# org_token_tensor = torch.tensor(speech_ids).cuda().unsqueeze(0).unsqueeze(0)
-# with torch.no_grad():
-#     org_wav =reconstruct_from_vq_code(org_token_tensor)  # (1, 1, T)
-# sf.write("reconstructed_org.wav", org_wav, 16000)
-
-# assert False
-
 # === Input: eval audio set ===
 split = 'valid'
-audio_eval_path = f'/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/bin_reprocess_gen_transcription/{split}_data.csv'
+audio_eval_path = f'/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/gen_speech_v1/{split}_instruct.csv'
 eval_list = pd.read_csv(audio_eval_path).to_dict(orient='records')[:]
 base_path = f'/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/Expresso_ears_dataset_{split}'
 # 获取当前日期
@@ -204,7 +184,6 @@ for audio in tqdm(eval_list[:2000]):
     max_retry = 1  # 最多重试次数
     attempt = 0
 
-    __import__('ipdb').set_trace()
     try:
         while attempt < max_retry:
             with torch.no_grad():

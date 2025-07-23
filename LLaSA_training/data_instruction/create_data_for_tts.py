@@ -52,12 +52,12 @@ def process_batch(df_batch, chunk_start_index, base_path, save_dir, chunk_size=2
     return chunk_start_index + num_chunks
 
 # ================= Main Logic =================
-df = pd.read_csv("/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/gen_speech_v1/train_instruct.csv")
-base_path = '/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/Expresso_ears_dataset_train'
-save_dir = "/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/VST_chunks"
+df = pd.read_csv("/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/gen_speech_v1/valid_instruct.csv")
+base_path = '/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/Expresso_ears_dataset_valid'
+save_dir = "/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/VST_chunks_valid"
 os.makedirs(save_dir, exist_ok=True)
 
-batch_size = 10000
+batch_size = 2000
 total_chunks = 0
 
 for start_idx in range(0, len(df), batch_size):
