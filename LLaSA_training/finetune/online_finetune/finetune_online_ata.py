@@ -182,6 +182,7 @@ class llm_with_codec_model(PreTrainedModel):
         labels[input_ids == self.tokenizer.pad_token_id] = self.ignore_index
 
         attention_mask = (input_ids != self.tokenizer.pad_token_id).long()
+        
         outputs = self.llm(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
         return outputs
 
@@ -261,13 +262,14 @@ def main():
 
     if training_args.use_lora:
         lora_config = LoraConfig(
-        r=8,                      
-        lora_alpha=32,           
-        target_modules=["q_proj", "v_proj"],   
-        lora_dropout=0.1,
-        bias="none",
-        task_type="CAUSAL_LM"
+            r=16,
+            lora_alpha=64,
+            target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+            lora_dropout=0.05,
+            bias="none",
+            task_type="CAUSAL_LM"
         )
+
         model = get_peft_model(model, lora_config)
     
         model.print_trainable_parameters()

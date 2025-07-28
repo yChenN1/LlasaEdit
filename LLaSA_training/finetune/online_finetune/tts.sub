@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#SBATCH --job-name="llasa_Etts"
+#SBATCH --job-name="tt"
 #SBATCH --partition=a100
 #SBATCH --gpus=2
 #SBATCH --nodes=1
@@ -15,17 +15,12 @@
 # module load gcc/11.4
 
 # Activate your conda environment
-source ~/.bashrc
-conda activate llasa
-
-# CUDA & GCC paths
 export CUDA_HOME=$HOME/cuda-12.6
 export PATH=$CUDA_HOME/bin:$PATH
 export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+export HF_DATASETS_CACHE=/mnt/fast/nobackup/scratch4weeks/jz01101/.hf_datasets_cache
 
-export CC=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-gcc
-export CXX=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-g++
-export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$CONDA_PREFIX/x86_64-conda-linux-gnu/lib:$CONDA_PREFIX/lib/gcc/x86_64-conda-linux-gnu/12.4.0:$LD_LIBRARY_PATH
+
 
 # Optional: allow unsupported compiler for nvcc
 export NVCC_FLAGS="--allow-unsupported-compiler"

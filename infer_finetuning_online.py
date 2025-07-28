@@ -35,7 +35,7 @@ os.environ["LD_LIBRARY_PATH"] = (
 
 
 # === Load Models ===
-llasa_1b = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/qic/test/checkpoint-2000_test'
+llasa_1b = '/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/finetune/0723_a2a_ata_lora_etts15k_5e-4/checkpoint-11000'
 # llasa_1b ='HKUSTAudio/Llasa-1B'
 tokenizer = AutoTokenizer.from_pretrained(llasa_1b)
 llm_model = AutoModelForCausalLM.from_pretrained(llasa_1b).eval().cuda()
