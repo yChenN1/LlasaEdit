@@ -4,8 +4,8 @@
   "bf16": true,
   "output_dir": "/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/finetune/test",
   "num_train_epochs": 10,
-  "per_device_train_batch_size": 4,
-  "per_device_eval_batch_size": 4,
+  "per_device_train_batch_size": 1,
+  "per_device_eval_batch_size": 1,
   "gradient_accumulation_steps": 4,
   "eval_strategy": "steps",
   "eval_steps": 100,
@@ -26,8 +26,9 @@
   "dataloader_num_workers": 4,
   "dataloader_prefetch_factor": 4,
   "deepspeed":"/mnt/fast/nobackup/users/jz01101/cy/LlasaEdit/LLaSA_training/ds_config_zero2.json",
-  "use_text": true,
+  "use_text": false,
   "task": "ata",
-  "text_guide": true,
-  "use_lora": false
+  "text_guide": false,
+  "use_lora": false,
+  "mix_mode": false
 }
