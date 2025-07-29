@@ -13,7 +13,7 @@ torch.set_printoptions(profile='full')
 
 # Adapt the dataset to the new format
 class WaveDataset(torch.utils.data.Dataset):
-    def __init__(self, data, sampling_rate, tokenizer, audio_norm_scale: float = 1.0, root_dir: str = "", max_audio_duration: float = 41.0, use_text=False, task='ata',text_guide=False):
+    def __init__(self, data, sampling_rate, tokenizer, audio_norm_scale: float = 1.0, root_dir: str = "", max_audio_duration: float = 41.0, use_text=False, task='ata',text_guide=False, mix_mode=False):
         """
         data: A list of data entries, each containing 'audio', 'transcription', 'speaker', etc.
         tokenizer: A tokenizer used to convert text into tokens.
@@ -30,6 +30,12 @@ class WaveDataset(torch.utils.data.Dataset):
         self.use_text = use_text  # wheather use text transcription as input or output
         self.task = task  # asr or audio to audio
         self.text_guide = text_guide # base use_text, whether use text as input
+        self.mix_mode = mix_mode
+
+        # Prepare the text for tokenization
+        if self.mix_mode:
+            p = random.random()
+            self.task == 'ata' if p > 0.3 else 'tts'
     
     def __len__(self):
         # Each record corresponds to one sample
@@ -38,7 +44,8 @@ class WaveDataset(torch.utils.data.Dataset):
     def __getitem__(self, index):
         max_retry = 10  # 避免死循环
         base_index = index // 2
-        mirror = index % 2 == 1
+        mirror = index % 2 == 1 
+
         for _ in range(max_retry):
             item = self.data[base_index]
             if not mirror:
@@ -107,9 +114,15 @@ class WaveDataset(torch.utils.data.Dataset):
         
         style_instruction = item['trg_instruct']
         
-        # Prepare the text for tokenization
-        # text_with_special = f"<|TEXT_UNDERSTANDING_START|>{transcription}<|TEXT_UNDERSTANDING_END|>"
-        if self.task == 'asr':
+
+        if self.task == 'tts':
+            transcription = item['text']
+            text_with_special = f"<|TEXT_UNDERSTANDING_START|>{transcription}<|TEXT_UNDERSTANDING_END|>"
+            chat = [
+                {"role": "user", "content": 'Convert text to speech.' + text_with_special}
+            ]
+
+        elif self.task == 'asr':
             transcription = item['text']
             text_with_special = f"<|TEXT_GENERATION_START|>{transcription}<|TEXT_GENERATION_END|>"
             chat = [
@@ -144,11 +157,11 @@ class WaveDataset(torch.utils.data.Dataset):
         text_length = text_tokens.size(0)
         
         # Return all the data
-        return src_audio, src_feat, trg_audio, trg_feat, src_audio_length, trg_audio_length, text_tokens, text_length
+        return src_audio, src_feat, trg_audio, trg_feat, src_audio_length, trg_audio_length, text_tokens, text_length, self.task
 
 def pad_audio_batch(batch):
     # audio_list, feat_list, audio_length_list, text_tokens_list, text_length_list = zip(*batch)
-    src_audio_list, src_feat_list, trg_audio_list, trg_feat_list, src_audio_length_list, trg_audio_length_list, text_tokens_list, text_length_list = zip(*batch)
+    src_audio_list, src_feat_list, trg_audio_list, trg_feat_list, src_audio_length_list, trg_audio_length_list, text_tokens_list, text_length_list, task = zip(*batch)
     
     # Pad source audio
     max_src_length_feat = max(feat.shape[1] for feat in src_feat_list)
@@ -222,4 +235,5 @@ def pad_audio_batch(batch):
         "trg_audio_length_tensor": trg_audio_length_tensor,
         "padded_text_tokens": padded_text_tokens,
         "text_length_tensor": text_length_tensor,
+        "task": task[0]
     }

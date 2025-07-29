@@ -58,9 +58,9 @@ class llm_with_codec_model(PreTrainedModel):
         self.base_num = 128256 + 8  # length of llama tokenizer + 8 new special tokens
         # Get special token ids for speech generation
         self.speech_gen_start_id = self.tokenizer.convert_tokens_to_ids('<|SPEECH_GENERATION_START|>')
-        self.speech_gen_end_id   = self.tokenizer.convert_tokens_to_ids('<|SPEECH_GENERATION_END|>')
+        self.speech_gen_end_id = self.tokenizer.convert_tokens_to_ids('<|SPEECH_GENERATION_END|>')
         self.speech_understanding_start_id = self.tokenizer.convert_tokens_to_ids('<|SPEECH_UNDERSTANDING_START|>')
-        self.speech_understanding_end_id   = self.tokenizer.convert_tokens_to_ids('<|SPEECH_UNDERSTANDING_END|>')
+        self.speech_understanding_end_id = self.tokenizer.convert_tokens_to_ids('<|SPEECH_UNDERSTANDING_END|>')
         self.text_gen_start_id = self.tokenizer.convert_tokens_to_ids('<|TEXT_GENERATION_START|>')
         self.text_gen_end_id   = self.tokenizer.convert_tokens_to_ids('<|TEXT_GENERATION_END|>')
         
@@ -104,6 +104,7 @@ class llm_with_codec_model(PreTrainedModel):
         trg_audio_length_tensor = batch["trg_audio_length_tensor"]      # Tensor, shape (B,)
         padded_text_tokens = batch["padded_text_tokens"]                # Tensor, shape (B, L_text_padded)
         text_length_tensor = batch["text_length_tensor"]                # Tensor, shape (B,)
+        self.task = batch["task"]
         
         batch_size = padded_src_audios.size(0)
     
@@ -157,8 +158,11 @@ class llm_with_codec_model(PreTrainedModel):
         # Concatenate the text tokens and the processed speech tokens for each sample, ensuring a fixed length of 2048
         combined_tokens = []
         max_total_length = 2048
+
         for text_tok, src_speech_tok, trg_speech_tok in zip(all_text_tokens, src_processed_speech_tokens, trg_processed_speech_tokens):
-            if self.task == 'asr' or (self.use_text and not self.text_guide):
+            if self.task == 'tts':
+                combined = text_tok + trg_speech_tok
+            elif self.task == 'asr' or (self.use_text and not self.text_guide):
                 text_gen_pos = text_tok.index(self.text_gen_start_id)
                 combined = text_tok[:text_gen_pos] + src_speech_tok + text_tok[text_gen_pos:] + trg_speech_tok
             else:
@@ -182,6 +186,7 @@ class llm_with_codec_model(PreTrainedModel):
         labels[input_ids == self.tokenizer.pad_token_id] = self.ignore_index
 
         attention_mask = (input_ids != self.tokenizer.pad_token_id).long()
+        
         outputs = self.llm(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
         return outputs
 
@@ -221,7 +226,9 @@ class CustomTrainingArguments(TrainingArguments):
     run_name: Optional[str] = field(default=None, metadata={"help": "The name of the run for logging."})
     gradient_checkpointing: bool = field(default=True)
     lr_scheduler_type: str = field(default="cosine", metadata={"help": "Learning rate scheduler type"})
-    use_lora: bool = field(default=False)
+    use_lora: bool = field(default=False),
+    mix_mode: bool = field(default=False)
+
 
 def main():
     default_config_file = 'config_ata.json'
@@ -275,6 +282,7 @@ def main():
             bias="none",
             task_type="CAUSAL_LM"
         )
+
         model = get_peft_model(model, lora_config)
     
         model.print_trainable_parameters()
@@ -301,12 +309,12 @@ def main():
             },
             split='train',
         )
-
+    
     train_dataset_raw = data_split
     from torch.utils.data import Subset
     # Instantiate custom dataset (pass in tokenizer for prompt construction and tokenization)
-    train_dataset = WaveDataset(train_dataset_raw, sampling_rate=16000, tokenizer=tokenizer, use_text=data_args.use_text, task=data_args.task, text_guide=data_args.text_guide)
-    test_dataset = WaveDataset(test_data_split, sampling_rate=16000, tokenizer=tokenizer, use_text=data_args.use_text, task=data_args.task, text_guide=data_args.text_guide)
+    train_dataset = WaveDataset(train_dataset_raw, sampling_rate=16000, tokenizer=tokenizer, use_text=data_args.use_text, task=data_args.task, text_guide=data_args.text_guide, mix_mode=training_args.mix_mode)
+    test_dataset = WaveDataset(test_data_split, sampling_rate=16000, tokenizer=tokenizer, use_text=data_args.use_text, task=data_args.task, text_guide=data_args.text_guide, mix_mode=False)
     test_dataset = Subset(test_dataset, list(range(500)))
 
     lwc_model = llm_with_codec_model(config, model, Codec_model, tokenizer, use_text=data_args.use_text, task=data_args.task, text_guide=data_args.text_guide)

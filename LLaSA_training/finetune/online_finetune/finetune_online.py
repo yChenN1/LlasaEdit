@@ -199,7 +199,7 @@ def main():
     # from xcodec2.modeling_xcodec2 import XCodec2Model
     # model_path = "HKUSTAudio/xcodec2"
     # Codec_model = XCodec2Model.from_pretrained(model_path)
-    sys.path.append('/mnt/fast/nobackup/users/yc01815/code/llasa/xcodec2/')
+    sys.path.append('/mnt/fast/nobackup/users/jz01101/cy/LlasaEdit/xcodec2/')
     from vq_process import extract_vq_code_for_offline_training as Codec_model
     
     if not data_args.use_instruction:

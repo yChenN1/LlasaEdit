@@ -24,10 +24,11 @@
   "model_max_length": 2048,
   "gradient_checkpointing": false,
   "dataloader_num_workers": 4,
-  "dataloader_prefetch_factor": 4 ,
+  "dataloader_prefetch_factor": 4,
   "deepspeed":"/mnt/bn/tanman-yg/chenqi/code/LlasaEdit/LLaSA_training/ds_config_zero2.json",
   "use_text": false,
   "task": "ata",
   "text_guide": false,
-  "use_lora": false
+  "use_lora": false,
+  "mix_mode": true
 }

@@ -31,3 +31,4 @@ LLaSA_training/online/
 xcodec2/
 *.json
 *.log
+LLaSA_training/exp/

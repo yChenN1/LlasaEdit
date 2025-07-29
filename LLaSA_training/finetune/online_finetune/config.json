@@ -9,7 +9,7 @@
   "gradient_accumulation_steps": 4,
   "eval_strategy": "steps",
   "eval_steps": 100,
-  "eval_on_start": false,
+  "eval_on_start": true,
   "remove_unused_columns": false,
   "save_strategy": "steps",
   "save_steps": 5000,
