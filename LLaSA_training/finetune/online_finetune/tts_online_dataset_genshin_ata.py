@@ -8,10 +8,12 @@ from transformers import AutoTokenizer, AutoFeatureExtractor
 from torchaudio.transforms import Resample
 from torch.utils.data import Dataset
 
+torch.set_printoptions(profile='full')
+
 
 # Adapt the dataset to the new format
 class WaveDataset(torch.utils.data.Dataset):
-    def __init__(self, data, sampling_rate, tokenizer, audio_norm_scale: float = 1.0, root_dir: str = "", max_audio_duration: float = 41.0, use_instruction=False, task='ata'):
+    def __init__(self, data, sampling_rate, tokenizer, audio_norm_scale: float = 1.0, root_dir: str = "", max_audio_duration: float = 41.0, use_text=False, task='ata',text_guide=False):
         """
         data: A list of data entries, each containing 'audio', 'transcription', 'speaker', etc.
         tokenizer: A tokenizer used to convert text into tokens.
@@ -25,27 +27,38 @@ class WaveDataset(torch.utils.data.Dataset):
         self.feature_extractor = AutoFeatureExtractor.from_pretrained("/mnt/bn/tanman-yg/chenqi/code/LlasaEdit/w2v-bert-2.0")
         self.tokenizer = tokenizer
         self.max_audio_frames = int(max_audio_duration * self.sampling_rate)  # Maximum number of frames for the given max duration
-        self.use_instruction = use_instruction
-        self.task = task
+        self.use_text = use_text  # wheather use text transcription as input or output
+        self.task = task  # asr or audio to audio
+        self.text_guide = text_guide # base use_text, whether use text as input
     
     def __len__(self):
         # Each record corresponds to one sample
-        return len(self.data)
+        return len(self.data) * 2
     
     def __getitem__(self, index):
         max_retry = 10  # 避免死循环
+        base_index = index // 2
+        mirror = index % 2 == 1
         for _ in range(max_retry):
-            item = self.data[index]
-            # speaker = item['speaker']  # 'speaker' directly from the dataset
-            src_audio_array = torch.tensor(item['src_audio']['array'])
-            src_sr = item['src_audio']['sampling_rate']
-            style_instruction = item['trg_instruct']
+            item = self.data[base_index]
+            if not mirror:
+                src_audio_array = torch.tensor(item['src_audio']['array'])
+                src_sr = item['src_audio']['sampling_rate']
+                style_instruction = item['trg_instruct']
+                trg_audio_array = torch.tensor(item['trg_audio']['array'])
+                trg_sr = item['trg_audio']['sampling_rate']
+            else:
+                src_audio_array = torch.tensor(item['trg_audio']['array'])
+                src_sr = item['trg_audio']['sampling_rate']
+                style_instruction = item['src_instruct']
+                trg_audio_array = torch.tensor(item['src_audio']['array'])
+                trg_sr = item['src_audio']['sampling_rate']
 
             def process_audio(audio_array, sr, target_sr):
                 if audio_array.ndim == 1:
-                    audio = torch.tensor(audio_array, dtype=torch.float).unsqueeze(0)
+                    audio = audio_array.float().unsqueeze(0)
                 else:
-                    audio = torch.tensor(audio_array, dtype=torch.float)
+                    audio = audio_array.float()
                 # Resample if needed
                 if sr != target_sr:
                     audio = Resample(sr, target_sr)(audio)
@@ -60,8 +73,6 @@ class WaveDataset(torch.utils.data.Dataset):
             else:
                  index = random.randint(0, len(self.data) - 1)
         
-        trg_audio_array = torch.tensor(item['trg_audio']['array'])
-        trg_sr = item['trg_audio']['sampling_rate']
         trg_audio = process_audio(trg_audio_array, trg_sr, self.sampling_rate)
 
         # Trim or pad audio to the max duration
@@ -106,14 +117,17 @@ class WaveDataset(torch.utils.data.Dataset):
             ]
 
         else:   
-            if not self.use_instruction:
+            if not self.use_text:
                 chat = [
                     {"role": "user", "content": "{style_instruction}".format(style_instruction=style_instruction)},
                     # {"role": "assistant", "content": f"Speaker {speaker}"}
                 ]
             else:
                 transcription = item['text']
-                text_with_special = f"<|TEXT_GENERATION_START|>{transcription}<|TEXT_GENERATION_END|>"
+                if self.text_guide:
+                    text_with_special = f"<|TEXT_UNDERSTANDING_START|>{transcription}<|TEXT_UNDERSTANDING_END|>"
+                else:   
+                    text_with_special = f"<|TEXT_GENERATION_START|>{transcription}<|TEXT_GENERATION_END|>"
 
                 chat = [
                     {"role": "system", "content": "You are an expert speech assistant. Your task is to generate an accurate transcription of the input speech, and follow the given instruction to convert speech that matches the provided style instruction as closely as possible."},
