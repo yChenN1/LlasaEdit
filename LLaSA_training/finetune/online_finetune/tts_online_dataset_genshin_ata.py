@@ -33,16 +33,27 @@ class WaveDataset(torch.utils.data.Dataset):
     
     def __len__(self):
         # Each record corresponds to one sample
-        return len(self.data)
+        return len(self.data) * 2
     
     def __getitem__(self, index):
         max_retry = 10  # 避免死循环
+        base_index = index // 2
+        mirror = index % 2 == 1 
+
         for _ in range(max_retry):
-            item = self.data[index]
-            # speaker = item['speaker']  # 'speaker' directly from the dataset
-            src_audio_array = torch.tensor(item['src_audio']['array'])
-            src_sr = item['src_audio']['sampling_rate']
-            style_instruction = item['trg_instruct']
+            item = self.data[base_index]
+            if not mirror:
+                src_audio_array = torch.tensor(item['src_audio']['array'])
+                src_sr = item['src_audio']['sampling_rate']
+                style_instruction = item['trg_instruct']
+                trg_audio_array = torch.tensor(item['trg_audio']['array'])
+                trg_sr = item['trg_audio']['sampling_rate']
+            else:
+                src_audio_array = torch.tensor(item['trg_audio']['array'])
+                src_sr = item['trg_audio']['sampling_rate']
+                style_instruction = item['src_instruct']
+                trg_audio_array = torch.tensor(item['src_audio']['array'])
+                trg_sr = item['src_audio']['sampling_rate']
 
             def process_audio(audio_array, sr, target_sr):
                 if audio_array.ndim == 1:
@@ -63,8 +74,6 @@ class WaveDataset(torch.utils.data.Dataset):
             else:
                  index = random.randint(0, len(self.data) - 1)
         
-        trg_audio_array = torch.tensor(item['trg_audio']['array'])
-        trg_sr = item['trg_audio']['sampling_rate']
         trg_audio = process_audio(trg_audio_array, trg_sr, self.sampling_rate)
 
         # Trim or pad audio to the max duration
