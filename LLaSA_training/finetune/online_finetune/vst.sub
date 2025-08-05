@@ -4,7 +4,7 @@
 #SBATCH --partition=a100
 #SBATCH --gpus=2
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=2
+#SBATCH --ntasks-per-node=1
 #SBATCH --mem=50G
 #SBATCH --time=03-00:00:00 
 #SBATCH --output=/dev/null
@@ -89,7 +89,7 @@ jq \
 
 # Launch training
 # torchrun --nproc_per_node=1 --master-port 10203 finetune_offline_w_rl.py
-torchrun --nproc_per_node=2 --master-port 20235 finetune_online_ata.py --config "$CONFIG_PATH"
+torchrun --nproc_per_node=2 --master-port 20239 finetune_online_ata.py --config "$CONFIG_PATH"
 
 
 

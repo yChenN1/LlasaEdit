@@ -3,13 +3,15 @@ import sys
 import glob
 import torch
 import jiwer
+import librosa
 import pandas as pd
+import numpy as np
 from tqdm import tqdm
 from pathlib import Path
 import soundfile as sf
 from datetime import datetime
 from whisper.normalizers import EnglishTextNormalizer
-sys.path.append('/mnt/fast/nobackup/users/yc01815/code/xcodec2')
+sys.path.append('/mnt/fast/nobackup/users/jz01101/cy/LlasaEdit/xcodec2')
 from vq_process import extract_vq_code, reconstruct_from_vq_code
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 
@@ -31,9 +33,9 @@ os.environ["LD_LIBRARY_PATH"] = (
 )
 
 
-llasa_1b ='/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/online/finetune/0715_Etts/checkpoint-10000'
+# llasa_1b ='/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/online/finetune/0715_Etts/checkpoint-10000'
 
-# llasa_1b = "HKUSTAudio/Llasa-1B"
+llasa_1b = "HKUSTAudio/Llasa-1B"
 tokenizer = AutoTokenizer.from_pretrained(llasa_1b)
 model = AutoModelForCausalLM.from_pretrained(llasa_1b)
 model.eval() 
@@ -63,11 +65,11 @@ def extract_speech_ids(speech_tokens_str):
 
 #TTS start!
 def gen_audio(data, save_path, mode='tts'):
-    for audio in tqdm(data):
+    for idx in tqdm(range(len(data))):
         with torch.no_grad():
-            input_text = audio['text']
-            save_name = f"{Path(audio['audio_path']).stem}.wav"
-            style_instruction = audio['caption']
+            input_text = data[idx]['text']
+            save_name = f"{Path(data[idx]['audio_path']).stem}.wav"
+            style_instruction = data[idx]['caption']
             
             formatted_text = f"<|TEXT_UNDERSTANDING_START|>{input_text}<|TEXT_UNDERSTANDING_END|>"
 
@@ -95,8 +97,36 @@ def gen_audio(data, save_path, mode='tts'):
                 return_tensors='pt', 
                 continue_final_message=True
             )
-            input_ids = input_ids.to('cuda')
             speech_end_id = tokenizer.convert_tokens_to_ids('<|SPEECH_GENERATION_END|>')
+            
+            def test(input_ids):
+                text_understanding_start_id = tokenizer.convert_tokens_to_ids('<|TEXT_UNDERSTANDING_START|>')
+                text_understanding_end_id = tokenizer.convert_tokens_to_ids('<|TEXT_UNDERSTANDING_END|>')
+                speech_understanding_start_id = tokenizer.convert_tokens_to_ids('<|SPEECH_UNDERSTANDING_START|>')
+                speech_understanding_end_id = tokenizer.convert_tokens_to_ids('<|SPEECH_UNDERSTANDING_END|>')
+                # tokenize the audio token, make it for test
+                base_path = f'/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/Expresso_ears_dataset_valid'
+                audio_path = f"{base_path}/{data[idx+1]['audio_path']}"
+                wav, sr = librosa.load(audio_path, sr=16000)
+                assert sr == 16000, "Only supports 16kHz audio"
+                with torch.no_grad():
+                    vq_code = extract_vq_code(wav)  # (1, 1, T_code)
+                speech_ids = vq_code[0, 0].cpu().numpy() + 128256 + 8
+                formatted_input = torch.from_numpy(np.array(
+                    [speech_understanding_start_id] +
+                    speech_ids.tolist() +
+                    [speech_understanding_end_id],
+                    dtype=np.int32
+                ))
+                # find the position of text understanding start
+                text_start_pos = (input_ids == text_understanding_start_id).nonzero(as_tuple=True)[0][0]
+                # add the text understanding end to the input
+                input_ids = torch.cat([input_ids[:text_start_pos], formatted_input, input_ids[text_start_pos:]], dim=0)
+
+                return input_ids
+
+            input_ids = test(input_ids.squeeze(0))
+            input_ids = input_ids.unsqueeze(0).to('cuda')
 
             # Generate the speech autoregressively
             outputs = model.generate(
@@ -117,6 +147,7 @@ def gen_audio(data, save_path, mode='tts'):
             # Decode the speech tokens to speech waveform
             gen_wav = reconstruct_from_vq_code(speech_tokens) 
         
+        # __import__('ipdb').set_trace()
         sf.write(f"{save_path}/{save_name}", gen_wav, 16000)
 
 
@@ -281,12 +312,13 @@ if __name__ == '__main__':
     today = datetime.now().strftime("%Y%m%d")
     
     mode_list = ['etts', 'tts']
-    mode = mode_list[0]
-    save_path = f"/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/evaluation/{today}/{mode}/{llasa_1b.split('-')[1]}"
+    mode = mode_list[1]
+    save_path = f"/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/evaluation/{today}/{mode}/{llasa_1b.split('-')[1]}_waudio_woorder"
     os.makedirs(save_path, exist_ok=True)
 
-    # gen_audio(eval_data[:500], save_path, mode)
-    asr('/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/evaluation/20250716/etts/10000', eval_data_path)
+    print('save audio in: ', save_path)
+    gen_audio(eval_data[:500], save_path, mode)
+    # asr('/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/evaluation/20250716/etts/10000', eval_data_path)
 
 
     assert False

@@ -29,7 +29,7 @@ from tts_online_dataset_genshin_ata import WaveDataset, pad_audio_batch
 sys.path.append('/mnt/fast/nobackup/users/jz01101/cy/LlasaEdit/xcodec2')
 from vq_process import extract_vq_code_for_offline_training as Codec_model
 from vq_process import reconstruct_from_vq_code
-from peft import LoraConfig, get_peft_model
+from peft import LoraConfig, get_peft_model, PeftModel
 
 seed = 42
 random.seed(seed)
@@ -38,6 +38,15 @@ torch.manual_seed(seed)
 torch.cuda.manual_seed_all(seed)
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
+
+
+class TaskSampler:
+    def __init__(self, initial="a2a"):
+        self.current_task = initial
+
+    def sample(self):
+        self.current_task = 'a2a' if random.random() > 1 else 'tts'
+        return self.current_task
 
 
 class llm_with_codec_model(PreTrainedModel):
@@ -50,6 +59,7 @@ class llm_with_codec_model(PreTrainedModel):
           - tokenizer: Tokenizer
         """
         super().__init__(config)
+
         self.config = config
         self.llm = llm
         self.encoder = encoder
@@ -104,7 +114,6 @@ class llm_with_codec_model(PreTrainedModel):
         trg_audio_length_tensor = batch["trg_audio_length_tensor"]      # Tensor, shape (B,)
         padded_text_tokens = batch["padded_text_tokens"]                # Tensor, shape (B, L_text_padded)
         text_length_tensor = batch["text_length_tensor"]                # Tensor, shape (B,)
-        self.task = batch["task"]
         
         batch_size = padded_src_audios.size(0)
     
@@ -157,10 +166,13 @@ class llm_with_codec_model(PreTrainedModel):
 
         # Concatenate the text tokens and the processed speech tokens for each sample, ensuring a fixed length of 2048
         combined_tokens = []
+        # max_total_length = 1536
         max_total_length = 2048
 
         for text_tok, src_speech_tok, trg_speech_tok in zip(all_text_tokens, src_processed_speech_tokens, trg_processed_speech_tokens):
             if self.task == 'tts':
+                # __import__('ipdb').set_trace()
+
                 combined = text_tok + trg_speech_tok
             elif self.task == 'asr' or (self.use_text and not self.text_guide):
                 text_gen_pos = text_tok.index(self.text_gen_start_id)
@@ -184,8 +196,8 @@ class llm_with_codec_model(PreTrainedModel):
                 first_gen_pos = (input_ids[i] == self.speech_gen_start_id).nonzero(as_tuple=True)[0].item()
             labels[i, :first_gen_pos] = self.ignore_index
         labels[input_ids == self.tokenizer.pad_token_id] = self.ignore_index
-
         attention_mask = (input_ids != self.tokenizer.pad_token_id).long()
+        # __import__('ipdb').set_trace()
         
         outputs = self.llm(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
         return outputs
@@ -266,22 +278,37 @@ def main():
     device_id = int(os.getenv('LOCAL_RANK', 0))
     device = torch.device(f'cuda:{device_id}' if torch.cuda.is_available() else 'cpu')
 
-    if training_args.use_lora:
-        lora_config = LoraConfig(
-            r=16,
-            lora_alpha=64,
-            target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
-            lora_dropout=0.05,
-            bias="none",
-            task_type="CAUSAL_LM"
-        )
-
-        model = get_peft_model(model, lora_config)
-    
-        model.print_trainable_parameters()
+    train_from_lora = True
+    if train_from_lora:
+        adapter_path = "/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/finetune/0730_asr_asr_llasa1b_5e-4/checkpoint-60000"
+        base_model = AutoModelForCausalLM.from_pretrained(model_args.llm_model_name_or_path)
+        model = PeftModel.from_pretrained(
+        base_model,
+        adapter_path,
+        # is_trainable=True  
+    )
+        model = model.merge_and_unload()
+        for param in model.parameters():
+            param.requires_grad = True
         trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
         print("Number of trainable parameters:", trainable_params)
 
+    else:
+        if training_args.use_lora:
+            lora_config = LoraConfig(
+                r=8,
+                lora_alpha=16,
+                target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+                lora_dropout=0.05,
+                bias="none",
+                task_type="CAUSAL_LM"
+            )
+            model = get_peft_model(model, lora_config)
+            model.print_trainable_parameters()
+            trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+            print("Number of trainable parameters:", trainable_params)
+
+    
     data_split = load_dataset(
             'parquet',
             data_files={
@@ -292,26 +319,47 @@ def main():
             split='train',
         )
     
-    valid = True
-    if valid:
-       test_data_split = load_dataset(
-            'parquet',
-            data_files={
-                'train': [
-                    '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/VST_chunks_valid/chunk_valid.parquet',
-                ]
-            },
-            split='train',
-        )
+    test_data_split = load_dataset(
+        'parquet',
+        data_files={
+            'train': [
+                '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/VST_chunks_valid/chunk_valid.parquet',
+            ]
+        },
+        split='train',
+    )
     
     train_dataset_raw = data_split
     from torch.utils.data import Subset
     # Instantiate custom dataset (pass in tokenizer for prompt construction and tokenization)
-    train_dataset = WaveDataset(train_dataset_raw, sampling_rate=16000, tokenizer=tokenizer, use_text=data_args.use_text, task=data_args.task, text_guide=data_args.text_guide, mix_mode=training_args.mix_mode)
-    test_dataset = WaveDataset(test_data_split, sampling_rate=16000, tokenizer=tokenizer, use_text=data_args.use_text, task=data_args.task, text_guide=data_args.text_guide, mix_mode=False)
+    train_dataset = WaveDataset(
+        train_dataset_raw, 
+        sampling_rate=16000, 
+        tokenizer=tokenizer, 
+        use_text=data_args.use_text, 
+        task=data_args.task, 
+        text_guide=data_args.text_guide, 
+        mix_mode=training_args.mix_mode,
+        batch_size=training_args.per_device_train_batch_size)
+    
+    test_dataset = WaveDataset(
+        test_data_split, 
+        sampling_rate=16000, 
+        tokenizer=tokenizer, 
+        use_text=data_args.use_text, 
+        task=data_args.task, 
+        text_guide=data_args.text_guide, 
+        mix_mode=False)
     test_dataset = Subset(test_dataset, list(range(500)))
-
-    lwc_model = llm_with_codec_model(config, model, Codec_model, tokenizer, use_text=data_args.use_text, task=data_args.task, text_guide=data_args.text_guide)
+    
+    lwc_model = llm_with_codec_model(
+        config, 
+        model, 
+        Codec_model, 
+        tokenizer, 
+        use_text=data_args.use_text, 
+        task=data_args.task, 
+        text_guide=data_args.text_guide)
     lwc_model = lwc_model.to(device)
     # lwc_model.freeze_encoder()
     trainer = Trainer(

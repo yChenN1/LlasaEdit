@@ -106,8 +106,8 @@ def process_audio_id(audio_id):
     # if len(total_input_ids) > max_seq_len:
     #     total_input_ids = total_input_ids[:max_seq_len]
 
-    if len(audio_input_ids) > int(max_seq_len * 2 / 7):
-        print(f"[SKIP] Audio input too long: {len(audio_input_ids)} > 2/7 * {max_seq_len}")
+    if len(audio_input_ids) > int(max_seq_len * 2 / 6):
+        print(f"[SKIP] Audio input too long: {len(audio_input_ids)} > 2/6 * {max_seq_len}")
         return (audio_path, None)
 
     if len(total_input_ids) < max_seq_len:
@@ -201,15 +201,15 @@ def process_data(split, real_code_root, gen_code_root, meta_data, output_dir_tts
 
 if __name__ == "__main__":
     
-    split = 'valid'
+    split = 'train'
     real_code_root = f'/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/vq_code_ear_expr_{split}'
     gen_code_root = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/vq_code_gen'
 
     os.makedirs(gen_code_root, exist_ok=True)
     meta_data = '/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/gen_speech_v1/train_instruct_v2.csv'
-    meta_data = '/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/gen_speech_v1/valid_instruct_0_1000.csv'
-    output_dir_tts = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/bin_reprocess_gen_transcription'
- 
+    # meta_data = '/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/gen_speech_v1/valid_instruct_0_1000.csv'
+    output_dir_tts = '/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/dataset/0804_gen_dataset_1/3'
+    os.makedirs(output_dir_tts, exist_ok=True)
     num_processes = 8
 
     process_data(

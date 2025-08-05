@@ -3,6 +3,7 @@ import json
 import torch
 import torch.nn as nn
 import pandas as pd
+from pathlib import Path
 from torch.utils.data import Dataset, DataLoader
 from transformers import (
     AutoTokenizer,
@@ -23,6 +24,7 @@ import numpy as np
 import random
 from datasets import load_dataset
 from functools import partial
+from peft import LoraConfig, get_peft_model
  
  
 @dataclass
@@ -55,6 +57,7 @@ class CustomTrainingArguments(TrainingArguments):
     lr_scheduler_type: str = field(default="cosine", metadata={"help": "The learning rate scheduler to use."})
     # evaluation_strategy: Literal["no", "steps", "epoch"] = field(default="steps", metadata={"help": "The evaluation strategy to use."})
     eval_steps: int = field(default=1, metadata={"help": "Evaluate every X updates steps."})
+    use_lora: bool = field(default=False, metadata={"help": "Whether to use lora."})
     
 
 class TTSDataset(Dataset):
@@ -113,11 +116,13 @@ class TTSDataset(Dataset):
             print(f"maybe Error in speech_gen_end_idx: {e}")
             # speech_gen_end_idx = len(input_ids) - 1
             speech_gen_end_idx = 2048
+        # __import__('remote_pdb').set_trace()
 
-        src_speech = input_ids[:speech_gen_idx]
+        src_speech = input_ids[:text_gen_positions]
+        text = input_ids[text_gen_positions:speech_gen_idx]
         gen_speech = input_ids[speech_gen_idx: speech_gen_end_idx + 1]
         
-        text_front = True
+        text_front = False
         if self.text_guidance:
             text_gen_idx = text_gen_positions[0].item()
             try:
@@ -146,7 +151,6 @@ class TTSDataset(Dataset):
                 {"role": "assistant", "content": "<|SPEECH_GENERATION_START|>"}
             ]
 
-
         ids = self.tokenizer.apply_chat_template(chat, tokenize=True)
     
         ids = self.replace_tagged_token(ids, self.speech_understanding_start_id, src_speech)
@@ -156,7 +160,6 @@ class TTSDataset(Dataset):
 
         input_ids = torch.tensor(ids, dtype=torch.long)
         labels = torch.full_like(input_ids, self.ignore_index)
-        # __import__('remote_pdb').set_trace()
         try:
             speech_gen_idx_in_input = (input_ids == self.speech_generation_start_id).nonzero(as_tuple=True)[0].item()
             labels[speech_gen_idx_in_input:] = input_ids[speech_gen_idx_in_input:]
@@ -210,7 +213,7 @@ def main():
         wandb.init(
             project="llm_tts",  
             config=training_args.to_sanitized_dict(),
-            name=training_args.run_name
+            name=Path(training_args.run_name).stem
         )
  
     tokenizer = AutoTokenizer.from_pretrained(
@@ -224,6 +227,21 @@ def main():
         torch_dtype='auto',
         cache_dir=model_args.cache_dir,
     )
+
+    if training_args.use_lora:
+        lora_config = LoraConfig(
+            r=8,                      
+            lora_alpha=32,           
+            target_modules=["q_proj", "v_proj"],   
+            lora_dropout=0.1,
+            bias="none",
+            task_type="CAUSAL_LM"
+        )
+        model = get_peft_model(model, lora_config)
+        print("LoRA微调模型参数信息：")
+        model.print_trainable_parameters()
+        trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        print("Number of trainable parameters:", trainable_params)
 
     train_dataset = TTSDataset(
         data_path=data_args.data_path,

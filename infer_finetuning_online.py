@@ -10,7 +10,7 @@ from tqdm import tqdm
 from pathlib import Path
 from datetime import datetime
 from transformers import AutoTokenizer, AutoModelForCausalLM
-sys.path.append('/mnt/fast/nobackup/users/yc01815/code/xcodec2')
+sys.path.append('/mnt/fast/nobackup/users/jz01101/cy/LlasaEdit/xcodec2')
 from vq_process import load_models, extract_vq_code, reconstruct_from_vq_code
 
 import warnings
@@ -35,7 +35,7 @@ os.environ["LD_LIBRARY_PATH"] = (
 
 
 # === Load Models ===
-llasa_1b = '/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/finetune/0723_a2a_ata_lora_etts15k_5e-4/checkpoint-11000'
+llasa_1b = '/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/finetune/0723_a2a_ata_etts15k_5e-5/checkpoint-22000'
 # llasa_1b ='HKUSTAudio/Llasa-1B'
 tokenizer = AutoTokenizer.from_pretrained(llasa_1b)
 llm_model = AutoModelForCausalLM.from_pretrained(llasa_1b).eval().cuda()
@@ -124,7 +124,7 @@ if "finetune_lora" in llasa_1b:
 elif 'grpo' in llasa_1b:
     save_path = f"/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/evaluation/grpo/{today}/{step}"
 elif "finetune" in llasa_1b:
-    save_path = f"/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/evaluation/{today}/{step}_{split}_tempo0.95"
+    save_path = f"/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/evaluation/{today}/{step}_{split}_tempo0.95"
 elif "text" in llasa_1b:
     save_path = f"/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/evaluation/text/{today}/{step}"
 else:
@@ -143,7 +143,9 @@ for audio in tqdm(eval_list[:2000]):
     # instruct = audio['instruct']
     # transcript = audio['transcription']
     audio_path = f"{base_path}/{audio['audio_path']}"
-    instruct = audio['trg_instruct']
+    # instruct = audio['trg_instruct']
+    instruct = 'convert the source speech to happy.'
+
     transcript = audio['text']
     wav, sr = librosa.load(audio_path, sr=16000)
     assert sr == 16000, "Only supports 16kHz audio"
@@ -154,11 +156,11 @@ for audio in tqdm(eval_list[:2000]):
     # === Generate New Speech Tokens ===
 
     formatted_input = torch.from_numpy(np.array(
-            [speech_understanding_start_id] +
-            speech_ids.tolist() +
-            [speech_understanding_end_id],
-            dtype=np.int32
-        ))
+        [speech_understanding_start_id] +
+        speech_ids.tolist() +
+        [speech_understanding_end_id],
+        dtype=np.int32
+    ))
 
 
     if use_text:
