@@ -71,7 +71,9 @@ class TTSDataset(Dataset):
         self.length = self.input_ids.shape[0]
         self.pad_token_id = tokenizer.pad_token_id   
         self.tokenizer = tokenizer
-        self.instuct = pd.read_csv(instruct_path, header=0)['trg_instruct'].tolist()
+        self.trg_instuct = pd.read_csv(instruct_path, header=0)['trg_instruct'].tolist()
+        self.src_instuct = pd.read_csv(instruct_path, header=0)['src_instruct'].tolist()
+        
         self.text_guidance = text_guidance
    
         self.speech_generation_start_id = tokenizer.convert_tokens_to_ids('<|SPEECH_GENERATION_START|>')
@@ -87,7 +89,7 @@ class TTSDataset(Dataset):
         self.ignore_index = -100  
         
     def __len__(self):
-        return self.length
+        return self.length * 2
 
     def replace_tagged_token(self, token_list, target_token, new_sequence):
         idx = token_list.index(target_token)
@@ -101,9 +103,10 @@ class TTSDataset(Dataset):
             return torch.cat([sequence, padding], dim=0)
 
     def __getitem__(self, idx):
-        input_ids = torch.tensor(self.input_ids[idx], dtype=torch.long)
-        instruct = self.instuct[idx]
-        input_ids = torch.tensor(input_ids, dtype=torch.long)
+        real_idx = idx // 2
+        mirror = idx % 2 == 1
+        input_ids = torch.tensor(self.input_ids[real_idx], dtype=torch.long)
+        input_ids = input_ids = input_ids.to(torch.long)
         labels = torch.full_like(input_ids, self.ignore_index)
 
         speech_gen_positions = (input_ids == self.speech_generation_start_id).nonzero(as_tuple=True)[0]
@@ -121,7 +124,12 @@ class TTSDataset(Dataset):
         src_speech = input_ids[:text_gen_positions]
         text = input_ids[text_gen_positions:speech_gen_idx]
         gen_speech = input_ids[speech_gen_idx: speech_gen_end_idx + 1]
+        instruct = self.trg_instuct[real_idx]
         
+        if mirror:
+            src_speech, gen_speech = gen_speech, src_speech
+            instruct = self.src_instuct[real_idx]
+
         text_front = False
         if self.text_guidance:
             text_gen_idx = text_gen_positions[0].item()
@@ -208,14 +216,15 @@ def main():
         ) = parser.parse_json_file(json_file=os.path.abspath(default_config_file))
      
     is_main_process = training_args.local_rank in [-1, 0]
- 
-    if training_args.report_to == "wandb" and is_main_process:
+    
+    if "wandb" in training_args.report_to and is_main_process:
         wandb.init(
-            project="llm_tts",  
+            project="llasa_finetuning",  
             config=training_args.to_sanitized_dict(),
             name=Path(training_args.run_name).stem
         )
- 
+    
+
     tokenizer = AutoTokenizer.from_pretrained(
         model_args.llm_model_name_or_path,
         model_max_length=training_args.model_max_length,
@@ -231,14 +240,14 @@ def main():
     if training_args.use_lora:
         lora_config = LoraConfig(
             r=8,                      
-            lora_alpha=32,           
-            target_modules=["q_proj", "v_proj"],   
+            lora_alpha=16,           
+            target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],   
             lora_dropout=0.1,
             bias="none",
             task_type="CAUSAL_LM"
         )
         model = get_peft_model(model, lora_config)
-        print("LoRA微调模型参数信息：")
+        print("LoRA finetuning parameter information:")
         model.print_trainable_parameters()
         trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
         print("Number of trainable parameters:", trainable_params)
