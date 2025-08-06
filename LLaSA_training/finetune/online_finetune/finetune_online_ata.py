@@ -197,7 +197,7 @@ class llm_with_codec_model(PreTrainedModel):
             labels[i, :first_gen_pos] = self.ignore_index
         labels[input_ids == self.tokenizer.pad_token_id] = self.ignore_index
         attention_mask = (input_ids != self.tokenizer.pad_token_id).long()
-        # __import__('ipdb').set_trace()
+        __import__('ipdb').set_trace()
         
         outputs = self.llm(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
         return outputs
@@ -278,20 +278,23 @@ def main():
     device_id = int(os.getenv('LOCAL_RANK', 0))
     device = torch.device(f'cuda:{device_id}' if torch.cuda.is_available() else 'cpu')
 
-    train_from_lora = True
+    train_from_lora = False
     if train_from_lora:
-        adapter_path = "/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/finetune/0730_asr_asr_llasa1b_5e-4/checkpoint-60000"
+        # adapter_path = "/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/finetune/0730_asr_asr_llasa1b_5e-4/checkpoint-60000"
+        adapter_path = "/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/qic/0803_a2a_0803_chat_rank8_32_lr1e4"
         base_model = AutoModelForCausalLM.from_pretrained(model_args.llm_model_name_or_path)
         model = PeftModel.from_pretrained(
         base_model,
         adapter_path,
-        # is_trainable=True  
+        is_trainable=True  
     )
-        model = model.merge_and_unload()
-        for param in model.parameters():
-            param.requires_grad = True
         trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
         print("Number of trainable parameters:", trainable_params)
+        # model = model.merge_and_unload()
+        # for param in model.parameters():
+        #     param.requires_grad = True
+        # trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        # print("Number of trainable parameters:", trainable_params)
 
     else:
         if training_args.use_lora:
@@ -350,7 +353,7 @@ def main():
         task=data_args.task, 
         text_guide=data_args.text_guide, 
         mix_mode=False)
-    test_dataset = Subset(test_dataset, list(range(500)))
+    test_dataset = Subset(test_dataset, list(range(1000)))
     
     lwc_model = llm_with_codec_model(
         config, 

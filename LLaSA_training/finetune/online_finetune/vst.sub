@@ -89,7 +89,7 @@ jq \
 
 # Launch training
 # torchrun --nproc_per_node=1 --master-port 10203 finetune_offline_w_rl.py
-torchrun --nproc_per_node=2 --master-port 20239 finetune_online_ata.py --config "$CONFIG_PATH"
+torchrun --nproc_per_node=2 --master-port 20241 finetune_online_ata.py --config "$CONFIG_PATH"
 
 
 

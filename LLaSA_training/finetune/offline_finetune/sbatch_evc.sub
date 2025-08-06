@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#SBATCH --job-name="llasa_evc"
+#SBATCH --job-name="ata"
 #SBATCH --partition=a100
 #SBATCH --gpus=2
 #SBATCH --nodes=1

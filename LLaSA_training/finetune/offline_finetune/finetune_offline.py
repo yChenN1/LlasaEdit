@@ -237,10 +237,20 @@ def main():
         cache_dir=model_args.cache_dir,
     )
 
-    if training_args.use_lora:
+    train_from_lora = True
+    if train_from_lora:
+        adapter_path = "/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/finetun_off/ata_0805_5e-4_r8_alpha32/checkpoint-16000"
+        base_model = AutoModelForCausalLM.from_pretrained(model_args.llm_model_name_or_path)
+        model = PeftModel.from_pretrained(
+        base_model,
+        adapter_path,
+        is_trainable=True)  
+        
+
+    else:
         lora_config = LoraConfig(
             r=8,                      
-            lora_alpha=16,           
+            lora_alpha=32,           
             target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],   
             lora_dropout=0.1,
             bias="none",

@@ -7,9 +7,12 @@ import numpy as np
 import pandas as pd
 import soundfile as sf
 from tqdm import tqdm
+import torch.nn.functional as F
 from pathlib import Path
 from datetime import datetime
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from torchaudio.transforms import Resample
+from datasets import load_dataset
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoFeatureExtractor
 sys.path.append('/mnt/fast/nobackup/users/jz01101/cy/LlasaEdit/xcodec2')
 from vq_process import load_models, extract_vq_code, reconstruct_from_vq_code
 
@@ -35,7 +38,7 @@ os.environ["LD_LIBRARY_PATH"] = (
 
 
 # === Load Models ===
-llasa_1b = '/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/finetune/0723_a2a_ata_etts15k_5e-5/checkpoint-22000'
+llasa_1b = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/qic/0803_a2a_0803_chat_rank8_32_lr1e4'
 # llasa_1b ='HKUSTAudio/Llasa-1B'
 tokenizer = AutoTokenizer.from_pretrained(llasa_1b)
 llm_model = AutoModelForCausalLM.from_pretrained(llasa_1b).eval().cuda()
@@ -104,10 +107,21 @@ else:
 
 
 # === Input: eval audio set ===
-split = 'valid'
-audio_eval_path = f'/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/gen_speech_v1/{split}_instruct.csv'
-eval_list = pd.read_csv(audio_eval_path).to_dict(orient='records')[:]
-base_path = f'/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/Expresso_ears_dataset_{split}'
+test_data_split = load_dataset(
+        'parquet',
+        data_files={
+            'train': [
+                '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/dataset/VST_chunks_valid/chunk_valid.parquet',
+            ]
+        },
+        split='train',
+    )
+
+
+# split = 'valid'
+# audio_eval_path = f'/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/gen_speech_v1/{split}_instruct.csv'
+# eval_list = pd.read_csv(audio_eval_path).to_dict(orient='records')[:]
+# base_path = f'/mnt/fast/nobackup/scratch4weeks/yc01815/Speech_gen_dataset/Expresso_ears_dataset_{split}'
 # 获取当前日期
 today = datetime.now().strftime("%Y%m%d")
 
@@ -124,131 +138,142 @@ if "finetune_lora" in llasa_1b:
 elif 'grpo' in llasa_1b:
     save_path = f"/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/evaluation/grpo/{today}/{step}"
 elif "finetune" in llasa_1b:
-    save_path = f"/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/evaluation/{today}/{step}_{split}_tempo0.95"
+    save_path = f"/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/evaluation/{today}/{step}_tempo0.95_sad"
 elif "text" in llasa_1b:
     save_path = f"/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/evaluation/text/{today}/{step}"
 else:
-    save_path = f"/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/evaluation/other/{today}/{step}"
+    save_path = f"/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/evaluation/other/{today}/{step}"
 
 print("Save path:", save_path)
 os.makedirs(save_path, exist_ok=True)
 
 
-gen_text = []
-gen_name = []
-gt_text = []
+# def process_audio(audio_array, sr, target_sr):
+#     audio_norm_scale = 1.0
+#     if audio_array.ndim == 1:
+#         audio = audio_array.float().unsqueeze(0)
+#     else:
+#         audio = audio_array.float()
+#     # Resample if needed
+#     if sr != target_sr:
+#         audio = Resample(sr, target_sr)(audio)
+#     if audio_norm_scale < 1.0:
+#         audio = audio * audio_norm_scale
+#     return audio
 
-for audio in tqdm(eval_list[:2000]):
-    # audio_path = f"{base_path}/{audio['src_path']}"
-    # instruct = audio['instruct']
-    # transcript = audio['transcription']
-    audio_path = f"{base_path}/{audio['audio_path']}"
-    # instruct = audio['trg_instruct']
-    instruct = 'convert the source speech to happy.'
-
-    transcript = audio['text']
-    wav, sr = librosa.load(audio_path, sr=16000)
-    assert sr == 16000, "Only supports 16kHz audio"
+from vq_process import extract_vq_code_for_offline_training as Codec_model
+def get_speech_token(input_waveform, input_features):
+    
+    """
+    Extract speech token sequence using the encoder.
+    It is assumed that encoder.encode_batch_feats returns a tensor whose shape could be (B, 1, seq_len) or (B, seq_len).
+    If the returned shape is (B, 1, seq_len), squeeze out the 1st dimension.
+    """
     with torch.no_grad():
-        vq_code = extract_vq_code(wav)  # (1, 1, T_code)
-    speech_ids = vq_code[0, 0].cpu().numpy() + 128256 + 8
-
-    # === Generate New Speech Tokens ===
-
-    formatted_input = torch.from_numpy(np.array(
-        [speech_understanding_start_id] +
-        speech_ids.tolist() +
-        [speech_understanding_end_id],
-        dtype=np.int32
-    ))
-
-
-    if use_text:
-        system_content = (
-            "You are an expert speech assistant. Your task is to generate an accurate and clear transcription of the input speech, and follow the given instruction to produce the appropriate speech."
-            if text_front else
-            "You are an expert speech assistant. Your task is to follow the given instruction to produce the appropriate speech, and generate an accurate and clear transcription of the input speech."
+        speech_tokens = Codec_model(
+            input_waveform=input_waveform,
+            input_features=input_features
         )
-        chat = [
-            {"role": "system", "content": system_content},
-            {"role": "user", "content": f"{instruct}:<|SPEECH_UNDERSTANDING_START|>"},
-            {"role": "assistant", "content": "The transcription of input speech is: <|TEXT_GENERATION_START|>" if text_front else "The converted speech is: <|SPEECH_GENERATION_START|>"}
+    if speech_tokens.dim() == 3 and speech_tokens.size(1) == 1:
+        speech_tokens = speech_tokens.squeeze(1)
+    return speech_tokens 
+
+# feature_extractor = AutoFeatureExtractor.from_pretrained("facebook/w2v-bert-2.0")
+
+from torch.utils.data import DataLoader
+sys.path.append('/mnt/fast/nobackup/users/jz01101/cy/LlasaEdit/LLaSA_training/finetune/online_finetune')
+
+from tts_online_dataset_genshin_ata import WaveDataset, pad_audio_batch
+from torch.utils.data import Subset
+
+test_dataset = WaveDataset(
+        test_data_split, 
+        sampling_rate=16000, 
+        tokenizer=tokenizer, 
+        use_text=False, 
+        task='ata', 
+        text_guide=False, 
+        mix_mode=False)
+test_dataset = Subset(test_dataset, list(range(500)))
+
+test_loader = DataLoader(
+    test_dataset,
+    batch_size=1,
+    shuffle=False,         
+    num_workers=0,        
+    pin_memory=True,
+    collate_fn=pad_audio_batch    
+)
+base_num = 128256 + 8
+with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+    for batch in tqdm(test_loader):
+        padded_src_audios = batch["padded_src_audios"].cuda()
+        padded_src_feats = batch["padded_src_feats"].cuda()
+        src_audio_length_tensor = batch["src_audio_length_tensor"]
+        padded_text_tokens = batch["padded_text_tokens"]
+        text_length_tensor = batch["text_length_tensor"]
+        src_name = batch['src_name']
+        trg_name = batch['trg_name']
+
+        batch_size = padded_src_audios.size(0)
+
+        # Text tokens
+        text_length_list = text_length_tensor.tolist()
+        all_text_tokens = [
+            padded_text_tokens[i, :text_length_list[i]].tolist()
+            for i in range(batch_size)
         ]
-    else:
-        chat = [
-            {"role": "user", "content": f"{instruct}:<|SPEECH_UNDERSTANDING_START|>"},
-            {"role": "assistant", "content": "<|SPEECH_GENERATION_START|>"}
-        ]
 
-    input_ids = tokenizer.apply_chat_template(chat, tokenize=True, return_tensors='pt', continue_final_message=True).to('cuda')
-    input_ids = replace_tagged_token_torch(input_ids.squeeze(0), speech_understanding_start_id, formatted_input).unsqueeze(0)
+        # Speech tokens
+        src_audio_length_list = src_audio_length_tensor.tolist()
+        src_speech_tokens_all = get_speech_token(
+            input_waveform=padded_src_audios,
+            input_features=padded_src_feats
+        )  # (B, L)
 
-    max_retry = 1  # 最多重试次数
-    attempt = 0
+        src_processed_speech_tokens = []
+        for i in range(batch_size):
+            src_tokens = src_speech_tokens_all[i, :src_audio_length_list[i]] + base_num
+            src_tokens = [speech_understanding_start_id] + src_tokens.tolist() + [speech_understanding_end_id, speech_generation_start_id]
+            src_processed_speech_tokens.append(src_tokens)
 
-    try:
-        while attempt < max_retry:
+        # input_ids 构建
+        max_total_length = 2048
+        combined_tokens = []
+        for text_tok, src_speech_tok in zip(all_text_tokens, src_processed_speech_tokens):
+            combined = text_tok + src_speech_tok
+            # if len(combined) > max_total_length:
+            #     continue
+            # else:
+            #     combined += [tokenizer.pad_token_id] * (max_total_length - len(combined))
+            combined_tokens.append(combined)
+
+        input_ids = torch.tensor(combined_tokens, dtype=torch.long).cuda()
+
+        with torch.no_grad():
+            outputs = llm_model.generate(
+                input_ids=input_ids,
+                max_length=2048,
+                eos_token_id=eos_token_id,
+                do_sample=True,
+                top_p=1.0,
+                temperature=0.95
+            )
+
+        for i in range(batch_size):
+            # extract generated speech token ids
+            generated_ids = outputs[i][input_ids.shape[1]:-1]
+            gen_tokens_str = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
+            gen_speech_ids = extract_speech_ids(gen_tokens_str)
+
+            gen_token_tensor = torch.tensor(gen_speech_ids).cuda().unsqueeze(0).unsqueeze(0)
             with torch.no_grad():
-                outputs = llm_model.generate(
-                    input_ids=input_ids,
-                    max_length=2048,
-                    eos_token_id=eos_token_id,
-                    do_sample=True,
-                    top_p=1.0,
-                    temperature=0.95
-                )
-            generated_ids = outputs[0][input_ids.shape[1]:-1]
-            try:
-                if use_text:
-                    if text_front:
-                        text_gen_end_idx = generated_ids.tolist().index(text_generation_end_id)
-                        gen_text_str = tokenizer.batch_decode(generated_ids[:text_gen_end_idx], skip_special_tokens=True)
-                        gen_text.append(''.join(gen_text_str))
-                        print(''.join(gen_text_str) + '----' + transcript)
-                        speech_gen_idx = generated_ids.tolist().index(speech_generation_start_id)
-                        gen_tokens_str = tokenizer.batch_decode(generated_ids[speech_gen_idx+1:], skip_special_tokens=True)
-                        
-                    else:
-                        # __import__('ipdb').set_trace()
-                        # gen_tokens_str = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
-                        speech_gen_end_idx = generated_ids.tolist().index(speech_generation_end_id)
-                        gen_tokens_str = tokenizer.batch_decode(generated_ids[:speech_gen_end_idx], skip_special_tokens=True)
-                        text_gen_idx = generated_ids.tolist().index(text_generation_start_id)
-                        gen_text_str = tokenizer.batch_decode(generated_ids[text_gen_idx+1:], skip_special_tokens=True)
-                        gen_text.append(''.join(gen_text_str))
-                        print(''.join(gen_text_str) + '----' + transcript)
-                else:
-                    gen_tokens_str = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
-                gen_speech_ids = extract_speech_ids(gen_tokens_str)
-                # 成功就退出循环
-                break
+                gen_wav = reconstruct_from_vq_code(gen_token_tensor)  # (1, 1, T)
 
-            except Exception as e:
-                print(f"[Retry {attempt+1}] Generation failed: {e}")
-                attempt += 1
-                continue
-
-        else:
-            raise RuntimeError("Generation failed after max retries.")
-    
-    except:
-        continue
-    
-    # === Decode Generated Tokens ===
-    gen_token_tensor = torch.tensor(gen_speech_ids).cuda().unsqueeze(0).unsqueeze(0)
-    with torch.no_grad():
-        gen_wav = reconstruct_from_vq_code(gen_token_tensor)  # (1, 1, T)
-    sf.write(f"{save_path}/{Path(audio_path).stem}_to_{Path(audio['vc_path']).stem}.wav", gen_wav, 16000)
-    gen_name.append(f"{save_path}/{Path(audio_path).stem}_to_{Path(audio['vc_path']).stem}.wav")
-    gt_text.append(transcript)
-
-df = pd.DataFrame({
-"filename": gen_name,
-"text_pre": gen_text,
-'text_gt': gt_text
-})
-
-df.to_csv(f"{save_path}/output.csv", index=False)    
-
+            # 写入音频
+            src = src_name[i]
+            trg = trg_name[i]
+            save_name = f"{save_path}/{src}_to_{trg}.wav"
+            sf.write(save_name, gen_wav.squeeze(), 16000)
     
 

@@ -3,6 +3,7 @@ import os
 import random
 import torch
 import numpy as np
+from pathlib import Path
 import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoFeatureExtractor
 from torchaudio.transforms import Resample
@@ -63,12 +64,17 @@ class WaveDataset(torch.utils.data.Dataset):
                 style_instruction = item['trg_instruct']
                 trg_audio_array = torch.tensor(item['trg_audio']['array'])
                 trg_sr = item['trg_audio']['sampling_rate']
+                src_name = Path(item['src_audio']['path']).stem
+                trg_name = Path(item['trg_audio']['path']).stem
             else:
                 src_audio_array = torch.tensor(item['trg_audio']['array'])
                 src_sr = item['trg_audio']['sampling_rate']
                 style_instruction = item['src_instruct']
                 trg_audio_array = torch.tensor(item['src_audio']['array'])
                 trg_sr = item['src_audio']['sampling_rate']
+                src_name = Path(item['trg_audio']['path']).stem
+                trg_name = Path(item['src_audio']['path']).stem
+
             transcription = item['text']
 
             def process_audio(audio_array, sr, target_sr):
@@ -120,7 +126,8 @@ class WaveDataset(torch.utils.data.Dataset):
         # Calculate audio length in frames
         src_audio_length = int(src_audio.shape[1] / self.hop_length)
         trg_audio_length = int(trg_audio.shape[1] / self.hop_length)
-                
+        
+        style_instruction = 'convert the source speech to sad style.'
         if self.task == 'tts':
             text_with_special = f"<|TEXT_UNDERSTANDING_START|>{transcription}<|TEXT_UNDERSTANDING_END|>"
             chat = [
@@ -161,10 +168,10 @@ class WaveDataset(torch.utils.data.Dataset):
         text_length = text_tokens.size(0)
         
         # Return all the data
-        return src_audio, src_feat, trg_audio, trg_feat, src_audio_length, trg_audio_length, text_tokens, text_length
+        return src_audio, src_feat, trg_audio, trg_feat, src_audio_length, trg_audio_length, text_tokens, text_length, src_name, trg_name
 
 def pad_audio_batch(batch):
-    src_audio_list, src_feat_list, trg_audio_list, trg_feat_list, src_audio_length_list, trg_audio_length_list, text_tokens_list, text_length_list = zip(*batch)
+    src_audio_list, src_feat_list, trg_audio_list, trg_feat_list, src_audio_length_list, trg_audio_length_list, text_tokens_list, text_length_list, src_name_list, trg_name_list = zip(*batch)
     
     # Pad source audio
     max_src_length_feat = max(feat.shape[1] for feat in src_feat_list)
@@ -238,4 +245,6 @@ def pad_audio_batch(batch):
         "trg_audio_length_tensor": trg_audio_length_tensor,
         "padded_text_tokens": padded_text_tokens,
         "text_length_tensor": text_length_tensor,
+        "src_name": src_name_list,
+        "trg_name": trg_name_list
     }
