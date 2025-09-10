@@ -26,7 +26,8 @@ class WaveDataset(torch.utils.data.Dataset):
             task='ata',
             text_guide=False, 
             mix_mode=False,
-            batch_size=1):
+            batch_size=1,
+            mode='train'):
         """
         data: A list of data entries, each containing 'audio', 'transcription', 'speaker', etc.
         tokenizer: A tokenizer used to convert text into tokens.
@@ -45,16 +46,19 @@ class WaveDataset(torch.utils.data.Dataset):
         self.text_guide = text_guide # base use_text, whether use text as input
         self.mix_mode = mix_mode
         self.batch_size = batch_size
+        self.mode = mode
 
     def __len__(self):
         # Each record corresponds to one sample
-        return len(self.data) * 2
+        return len(self.data) * 2 if self.mode == "train" else len(self.data)
     
     def __getitem__(self, index):
 
         max_retry = 10  # 避免死循环
-        base_index = index // 2
-        mirror = index % 2 == 1 
+        # base_index = index // 2
+        # mirror = index % 2 == 1 
+        base_index = index if self.mode != "train" else index // 2
+        mirror = (self.mode == "train") and (index % 2 == 1)
         
         for _ in range(max_retry):
             item = self.data[base_index]
@@ -142,7 +146,8 @@ class WaveDataset(torch.utils.data.Dataset):
         elif self.task == 'ata':  
             if not self.use_text:
                 chat = [
-                    {"role": "user", "content": "{style_instruction}".format(style_instruction=style_instruction)},
+                    {"role": "user", "content": f"{style_instruction} <|SPEECH_UNDERSTANDING_START|>"},
+                    {"role": "assistant", "content": f"<|SPEECH_GENERATION_START|>"}
                 ]
             else:
                 if self.text_guide:

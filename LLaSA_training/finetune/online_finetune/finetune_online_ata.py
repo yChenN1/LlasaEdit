@@ -94,6 +94,18 @@ class llm_with_codec_model(PreTrainedModel):
             speech_tokens = speech_tokens.squeeze(1)
         return speech_tokens 
 
+
+    def convert_token_to_speech(self, outputs):
+        __import__('ipdb').set_trace()
+        token = torch.argmax(outputs[1], dim=-1)
+        index = 0 
+        gen_begin = (token[index]==self.speech_gen_start_id).nonzero().item()[0]
+        gen_end = (token[index]==self.speech_gen_end_id).nonzero().item()[0]
+        gen_speech = token[gen_begin+1:gen_end]
+        gen_speech = reconstruct_from_vq_code(gen_speech)
+        from soundfile import sf
+        sf.write('gen_speech.wav', gen_speech, 16000)
+
     @torch.autocast(device_type="cuda", dtype=torch.bfloat16)
     def forward(self, **batch):
         """
@@ -278,10 +290,10 @@ def main():
     device_id = int(os.getenv('LOCAL_RANK', 0))
     device = torch.device(f'cuda:{device_id}' if torch.cuda.is_available() else 'cpu')
 
-    train_from_lora = False
+    train_from_lora = True
     if train_from_lora:
         # adapter_path = "/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/finetune/0730_asr_asr_llasa1b_5e-4/checkpoint-60000"
-        adapter_path = "/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/qic/0803_a2a_0803_chat_rank8_32_lr1e4"
+        adapter_path = "/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/qic/0808_a2a_0807_lora_mlp_rank64alpha128_lr1e4_iter6000"
         base_model = AutoModelForCausalLM.from_pretrained(model_args.llm_model_name_or_path)
         model = PeftModel.from_pretrained(
         base_model,

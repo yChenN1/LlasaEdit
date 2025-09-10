@@ -38,7 +38,7 @@ os.environ["LD_LIBRARY_PATH"] = (
 
 
 # === Load Models ===
-llasa_1b = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/qic/0803_a2a_0803_chat_rank8_32_lr1e4'
+llasa_1b = '/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/LLaSA_training/qic/0808_a2a_0807_lora_mlp_rank64alpha128_lr1e4_iter8000'
 # llasa_1b ='HKUSTAudio/Llasa-1B'
 tokenizer = AutoTokenizer.from_pretrained(llasa_1b)
 llm_model = AutoModelForCausalLM.from_pretrained(llasa_1b).eval().cuda()
@@ -142,7 +142,7 @@ elif "finetune" in llasa_1b:
 elif "text" in llasa_1b:
     save_path = f"/mnt/fast/nobackup/scratch4weeks/yc01815/llasa/evaluation/text/{today}/{step}"
 else:
-    save_path = f"/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/evaluation/other/{today}/{step}"
+    save_path = f"/mnt/fast/nobackup/scratch4weeks/jz01101/llasa/evaluation/other/{today}/{step}2"
 
 print("Save path:", save_path)
 os.makedirs(save_path, exist_ok=True)
@@ -193,8 +193,9 @@ test_dataset = WaveDataset(
         use_text=False, 
         task='ata', 
         text_guide=False, 
-        mix_mode=False)
-test_dataset = Subset(test_dataset, list(range(500)))
+        mix_mode=False,
+        mode='eval')
+test_dataset = Subset(test_dataset, list(range(1000)))
 
 test_loader = DataLoader(
     test_dataset,
@@ -234,14 +235,16 @@ with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
         src_processed_speech_tokens = []
         for i in range(batch_size):
             src_tokens = src_speech_tokens_all[i, :src_audio_length_list[i]] + base_num
-            src_tokens = [speech_understanding_start_id] + src_tokens.tolist() + [speech_understanding_end_id, speech_generation_start_id]
+            src_tokens = [speech_understanding_start_id] + src_tokens.tolist() + [speech_understanding_end_id]
             src_processed_speech_tokens.append(src_tokens)
 
         # input_ids 构建
         max_total_length = 2048
         combined_tokens = []
         for text_tok, src_speech_tok in zip(all_text_tokens, src_processed_speech_tokens):
-            combined = text_tok + src_speech_tok
+            # combined = text_tok + src_speech_tok
+            combined = replace_tagged_token(text_tok, speech_understanding_start_id, src_speech_tok)
+                
             # if len(combined) > max_total_length:
             #     continue
             # else:
@@ -253,11 +256,12 @@ with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
         with torch.no_grad():
             outputs = llm_model.generate(
                 input_ids=input_ids,
-                max_length=2048,
+                max_length=2048,                  # 根据任务调小，避免过长胡言乱语
                 eos_token_id=eos_token_id,
                 do_sample=True,
-                top_p=1.0,
-                temperature=0.95
+                top_p=0.9,                       # 限制采样范围
+                temperature=0.7,                 # 降低温度，减少发散
+                repetition_penalty=1.2           # 惩罚重复片段（>1 抑制，<1 鼓励重复）
             )
 
         for i in range(batch_size):
